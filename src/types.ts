@@ -29,3 +29,8 @@ export interface FollowersDB{
     followed_id:string,
     follow_id:string
 }
+
+export enum Role {
+    ADMIN="ADMIN",
+    USER="USER"
+}
