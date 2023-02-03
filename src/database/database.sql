@@ -16,7 +16,7 @@ CREATE TABLE posts (
     creator_id TEXT NOT NULL,
     content TEXT NOT NULL,
     likes INTEGER DEFAULT(0) NOT NULL,
-    delikes INTEGER DEFAULT(0) NOT NULL,
+    dislikes INTEGER DEFAULT(0) NOT NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     FOREIGN KEY (creator_id) REFERENCES users(id)
@@ -25,7 +25,7 @@ CREATE TABLE posts (
 CREATE TABLE likes_dislikes(
     user_id TEXT NOT NULL,
     post_id TEXT NOT NULL,
-    like INTEGER DEFAULT(0) NOT NULL,
+    like INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
@@ -37,7 +37,7 @@ FOREIGN KEY (follow_id) REFERENCES users(id)
 );
 
 DROP TABLE users;
-DROP TABLE post;
+DROP TABLE posts;
 DROP TABLE likes_dislikes;
 DROP TABLE followers;
 

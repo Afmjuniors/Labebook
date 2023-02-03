@@ -1,4 +1,5 @@
-import { PostDB } from "../types";
+import { Post } from "../models/Post";
+import { LikesDeslikesDB, PostDB } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase{
@@ -50,6 +51,7 @@ export class PostDatabase extends BaseDatabase{
         .del()
         .where({id})
     }
+
 
 
 }

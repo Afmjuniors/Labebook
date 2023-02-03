@@ -6,7 +6,7 @@ export class Post{
        private likes:number,
        private deslikes:number,
        private createdAt:string,
-       private modifedAt:string
+       private updatedAt:string
     ){}
     public getId():string{return this.id}
     public setId(id:string):void{this.id=id}
@@ -26,8 +26,8 @@ export class Post{
     public getCreatedAt():string{return this.createdAt}
     public setCreatedAt(createdAt:string):void{this.createdAt=createdAt}
     
-    public getModifedAt():string{return this.modifedAt}
-    public setModifedAt(modifedAt:string):void{this.modifedAt=modifedAt}
+    public getUpdatedAt():string{return this.updatedAt}
+    public setUpdatedAt(updatedAt:string):void{this.updatedAt=updatedAt}
 
 
 }
