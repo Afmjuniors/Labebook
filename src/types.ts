@@ -3,7 +3,7 @@ export interface UserDB{
     name:string,
     email:string,
     password:string,
-    role:string,
+    role:Role,
     follows:number,
     followed:number,
     created_at:string,
@@ -28,6 +28,11 @@ export interface LikesDeslikesDB{
 export interface FollowersDB{
     followed_id:string,
     follow_id:string
+}
+
+export interface Follower{
+    followedId:string,
+    followId:string
 }
 
 export enum Role {

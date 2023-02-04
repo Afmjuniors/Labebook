@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { UserController } from './controller/UserController'
+import { FollowsDatabase } from './database/FollowsDatabase'
 
 
 const app = express()
@@ -14,7 +15,12 @@ app.listen(3003, () => {
 
 app.get("/ping", async (req: Request, res: Response) => {
     try {
-        res.status(200).send({ message: "Pong!s" })
+        const follow = new FollowsDatabase()
+
+        const result = await follow.findFollowersNumber("u002")
+
+
+        res.status(200).send(result)
     } catch (error) {
         console.log(error)
 
@@ -32,4 +38,7 @@ app.get("/ping", async (req: Request, res: Response) => {
 const usersController = new UserController()
 
 app.get("/users", usersController.getUsers)
+
+
+
 

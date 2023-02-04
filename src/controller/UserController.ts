@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { BaseDatabase } from "../database/BaseDatabase";
+import { FollowsDatabase } from "../database/FollowsDatabase";
 import { UserDatabase } from "../database/UsersDatabase";
+import { User } from "../models/User";
+import { UserDB } from "../types";
 
 export class UserController{
     public async getUsers(req:Request, res:Response){
@@ -29,4 +32,42 @@ export class UserController{
             }
         }
     }
+    public async getUsersById(req:Request, res:Response){
+        try {
+          const id = req.params.id
+          const userDatabase = new UserDatabase()
+
+          const userDB : UserDB | undefined= await userDatabase.findeUserById(id)
+            if(userDB){
+             
+                const user = new User(
+                    userDB.id,
+                    userDB.name,
+                    userDB.email,
+                    userDB.password,
+                    userDB.role,
+                    10,
+                    10,
+                    userDB.created_at,
+                    userDB.updated_at
+                )
+            }
+
+            
+        } catch (error) {
+            console.log(error)
+
+            if (req.statusCode === 200) {
+                res.status(500)
+            }
+
+            if (error instanceof Error) {
+                res.send(error.message)
+            } else {
+                res.send("Erro inesperado")
+            }
+        }
+    }
+
+    
 }
