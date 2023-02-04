@@ -38,6 +38,7 @@ app.get("/ping", async (req: Request, res: Response) => {
 const usersController = new UserController()
 
 app.get("/users", usersController.getUsers)
+app.get("/users/:id", usersController.getUsersById)
 
 
 

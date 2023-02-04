@@ -34,6 +34,17 @@ export interface Follower{
     followedId:string,
     followId:string
 }
+export interface ResponseFollows {
+    followedBy:{
+        count:number,
+        ids:string[]
+    },
+    follows:{
+        count:number,
+        ids:string[]
+    }
+}
+
 
 export enum Role {
     ADMIN="ADMIN",

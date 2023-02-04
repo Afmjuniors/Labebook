@@ -3,21 +3,21 @@ import { BaseDatabase } from "../database/BaseDatabase";
 import { FollowsDatabase } from "../database/FollowsDatabase";
 import { UserDatabase } from "../database/UsersDatabase";
 import { User } from "../models/User";
-import { UserDB } from "../types";
+import { ResponseFollows, UserDB } from "../types";
 
-export class UserController{
-    public async getUsers(req:Request, res:Response){
+export class UserController {
+    public async getUsers(req: Request, res: Response) {
         try {
             const name = req.query.q as string | undefined
-            const userDatabase = new UserDatabase() 
-           
+            const userDatabase = new UserDatabase()
+
             const result = await userDatabase.findUser(name)
             res.status(200).send({
-                message:"usuarios encontrados",
-                result:result
-        })
-      
-            
+                message: "usuarios encontrados",
+                result: result
+            })
+
+
         } catch (error) {
             console.log(error)
 
@@ -32,13 +32,16 @@ export class UserController{
             }
         }
     }
-    public async getUsersById(req:Request, res:Response){
+    public async getUsersById(req: Request, res: Response) {
         try {
-          const id = req.params.id
-          const userDatabase = new UserDatabase()
+            const id = req.params.id
+            const userDatabase = new UserDatabase()
 
-          const userDB : UserDB | undefined= await userDatabase.findeUserById(id)
-            if(userDB){
+            const userDB: UserDB | undefined = await userDatabase.findeUserById(id)
+            if (userDB) {
+                const followesDatabase = new FollowsDatabase()
+
+                const followers: ResponseFollows = await followesDatabase.findFollowersNumber(userDB.id)
              
                 const user = new User(
                     userDB.id,
@@ -46,14 +49,20 @@ export class UserController{
                     userDB.email,
                     userDB.password,
                     userDB.role,
-                    10,
-                    10,
+                    followers.follows.count,
+                    followers.followedBy.count,
                     userDB.created_at,
                     userDB.updated_at
                 )
+                res.status(200).send(user)
+            }else{
+                res.status(400)
+                throw new Error("User não encontrado");
+                
             }
 
-            
+
+
         } catch (error) {
             console.log(error)
 
@@ -69,5 +78,5 @@ export class UserController{
         }
     }
 
-    
+
 }

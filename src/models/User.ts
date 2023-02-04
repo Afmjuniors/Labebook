@@ -10,7 +10,8 @@ export class User{
         private follows:number,
         private followed:number,
         private createAt:string,
-        private updateAt:string
+        private updateAt:string,
+        private follo?:User
     ){}
         public getId():string{return this.id}
         public setId(id:string):void{this.id=id}

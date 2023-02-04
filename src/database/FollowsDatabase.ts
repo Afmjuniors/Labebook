@@ -1,13 +1,14 @@
+import { FollowersDB, ResponseFollows } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class FollowsDatabase extends BaseDatabase{
     private static TABLE_FOLLOWS = "followers"
 
-    public async findFollowersNumber(idUser:string){
-        const followedsDB = await BaseDatabase
+    public async findFollowersNumber(idUser:string):Promise<ResponseFollows>{
+        const followedsDB : FollowersDB[]= await BaseDatabase
         .connection(FollowsDatabase.TABLE_FOLLOWS)
         .where({followed_id: idUser})//as pessoas que me segue
-        const followsDB = await BaseDatabase
+        const followsDB: FollowersDB[] = await BaseDatabase
         .connection(FollowsDatabase.TABLE_FOLLOWS)
         .where({follow_id: idUser})
 
