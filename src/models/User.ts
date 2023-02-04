@@ -13,7 +13,6 @@ export class User{
         private updateAt:string
     ){}
         public getId():string{return this.id}
-        public setId(id:string):void{this.id=id}
         
         public getName():string{return this.name}
         public setName(name:string):void{this.name=name}
@@ -34,7 +33,6 @@ export class User{
         public setFollowed(followed:number):void{this.followed=followed}
 
         public getCreateAt():string{return this.createAt}
-        public setCreateAt(createAt:string):void{this.createAt=createAt}
 
         public getUpdateAt():string{return this.updateAt}
         public setUpdateAt(updateAt:string):void{this.updateAt=updateAt}

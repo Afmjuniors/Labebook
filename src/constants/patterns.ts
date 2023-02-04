@@ -1,0 +1,1 @@
+export const patternDate = new Date().toISOString()

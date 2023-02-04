@@ -3,7 +3,7 @@ export interface UserDB{
     name:string,
     email:string,
     password:string,
-    role:string,
+    role:Role,
     follows:number,
     followed:number,
     created_at:string,
@@ -29,6 +29,37 @@ export interface FollowersDB{
     followed_id:string,
     follow_id:string
 }
+
+export interface Follower{
+    followedId:string,
+    followId:string
+}
+export interface ResponseFollows {
+    followedBy:{
+        count:number,
+        ids:string[]
+    },
+    follows:{
+        count:number,
+        ids:string[]
+    }
+}
+export interface UserDTO{
+    id:string,
+    name:string,
+    email:string,
+    password:string,
+    role:Role
+}
+
+export interface UserToEditDB{
+    name:string,
+    email:string,
+    password:string,
+    role:Role,
+    updated_at:string
+}
+
 
 export enum Role {
     ADMIN="ADMIN",
