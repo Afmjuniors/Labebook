@@ -44,6 +44,21 @@ export interface ResponseFollows {
         ids:string[]
     }
 }
+export interface UserDTO{
+    id:string,
+    name:string,
+    email:string,
+    password:string,
+    role:Role
+}
+
+export interface UserToEditDB{
+    name:string,
+    email:string,
+    password:string,
+    role:Role,
+    updated_at:string
+}
 
 
 export enum Role {

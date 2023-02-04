@@ -3,7 +3,7 @@ import { LikesDeslikesDB, PostDB } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase{
-    private static TABLE_POSTS = "posts"
+    public static TABLE_POSTS = "posts"
 
     public async findPost(creatorId?:string, content?:string):Promise<PostDB[]>{
         let postsDB

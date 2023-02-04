@@ -39,6 +39,8 @@ const usersController = new UserController()
 
 app.get("/users", usersController.getUsers)
 app.get("/users/:id", usersController.getUsersById)
+app.post("/users", usersController.createNewUser)
+app.patch("/users/:id", usersController.editUser)
 
 
 
