@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
+import { UserController } from './controller/UserController'
 
 
 const app = express()
@@ -13,7 +14,7 @@ app.listen(3003, () => {
 
 app.get("/ping", async (req: Request, res: Response) => {
     try {
-        res.status(200).send({ message: "Pong!" })
+        res.status(200).send({ message: "Pong!s" })
     } catch (error) {
         console.log(error)
 
@@ -28,4 +29,7 @@ app.get("/ping", async (req: Request, res: Response) => {
         }
     }
 })
+const usersController = new UserController()
+
+app.get("/users", usersController.getUsers)
 

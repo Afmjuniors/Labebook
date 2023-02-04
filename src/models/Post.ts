@@ -1,3 +1,5 @@
+import { appendFile } from "fs"
+
 export class Post{
     constructor(
        private id:string,
