@@ -212,6 +212,41 @@ export class UserController {
             
         }
     }
+    public async deleteUserById(req:Request, res:Response){
+        try {
+            const idToDelete = req.params.id
+
+            const userDatabase = new UserDatabase()
+
+            const userToDelete = await userDatabase.findeUserById(idToDelete)
+            if(userToDelete){
+                await userDatabase.deleteUser(idToDelete)
+                res.status(200).send({
+                    message:"User deleted"
+                })
+
+            }else{
+                res.status(404)
+                throw new Error("User not found");
+                
+            }
+
+            
+        } catch (error) {
+            console.log(error)
+
+            if (req.statusCode === 200) {
+                res.status(500)
+            }
+
+            if (error instanceof Error) {
+                res.send(error.message)
+            } else {
+                res.send("Erro inesperado")
+            }
+            
+        }
+    }
 
 
 }
