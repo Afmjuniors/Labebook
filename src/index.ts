@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { UserController } from './controller/UserController'
 import { FollowsDatabase } from './database/FollowsDatabase'
+import { PostController } from './controller/PostController'
 
 
 const app = express()
@@ -36,12 +37,16 @@ app.get("/ping", async (req: Request, res: Response) => {
     }
 })
 const usersController = new UserController()
+const postController = new PostController()
 
 app.get("/users", usersController.getUsers)
 app.get("/users/:id", usersController.getUsersById)
 app.post("/users", usersController.createNewUser)
 app.patch("/users/:id", usersController.editUser)
 app.delete("/users/:id", usersController.deleteUserById)
+
+
+app.get("/posts/:id", postController.getPosts)
 
 
 

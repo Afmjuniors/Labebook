@@ -1,3 +1,8 @@
+export enum Role {
+    ADMIN="ADMIN",
+    USER="USER"
+}
+
 export interface UserDB{
     id:string,
     name:string,
@@ -14,7 +19,7 @@ export interface PostDB{
     creator_id:string,
     content:string,
     likes:number,
-    delikes:number,
+    dislikes:number,
     created_at:string,
     updated_at:string
 }
@@ -22,7 +27,7 @@ export interface PostDB{
 export interface LikesDeslikesDB{
     user_id:string,
     post_id:string,
-    likes: number
+    like: number
 }
 
 export interface FollowersDB{
@@ -59,9 +64,21 @@ export interface UserToEditDB{
     role:Role,
     updated_at:string
 }
-
-
-export enum Role {
-    ADMIN="ADMIN",
-    USER="USER"
+export interface CreatorIDPost{
+    id:string
+    name:string,
 }
+
+export interface PostDTO  {
+    id: string,
+    content: string,
+    likes: number,
+    dislikes:number,
+    createdAt: string,
+    updatedAt: string,
+    creator: CreatorIDPost
+}
+
+
+
+

@@ -5,18 +5,14 @@ import { BaseDatabase } from "./BaseDatabase";
 export class PostDatabase extends BaseDatabase{
     public static TABLE_POSTS = "posts"
 
-    public async findPost(creatorId?:string, content?:string):Promise<PostDB[]>{
+    public async findPosts(creatorId?:string):Promise<PostDB[]>{
         let postsDB
         if(creatorId){
             const result: PostDB[] = await BaseDatabase
             .connection(PostDatabase.TABLE_POSTS)
-            .where({id:creatorId})
+            .where({creator_id:creatorId})
             postsDB= result
-        }else if(content){
-            const result: PostDB[] = await BaseDatabase
-            .connection(PostDatabase.TABLE_POSTS)
-            .where("content","LIKE",`%${content}%`)
-            postsDB= result
+        
         }else{
             const result: PostDB[] = await BaseDatabase
             .connection(PostDatabase.TABLE_POSTS)
