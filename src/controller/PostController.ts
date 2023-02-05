@@ -4,9 +4,10 @@ import { PostDatabase } from "../database/PostsDatabase"
 import { UserDatabase } from "../database/UsersDatabase"
 import { likeDislikePost } from "../models/LikeDislikePost"
 import { Post } from "../models/Post"
-import { CreatorIDPost, LikesDeslikesDB, PostDB, PostDTO, PostLikeDislikeDB, PostToedit, UserDB } from "../types"
+import { CreatorIDPost, ReactionDB, PostDB, PostDTO, ReactionEditedDB, PostToEdit, UserDB } from "../types"
 
 export class PostController {
+
     public async getPosts(req: Request, res: Response) {
         try {
             const id = req.params.id
@@ -17,32 +18,26 @@ export class PostController {
             const postsDB = await postDatabase.findPosts(id)
             const user: UserDB | undefined = await userDatabase.findeUserById(id)
             if (user === undefined) {
-                throw new Error("nao encontrado");
+                res.status(404)
+                throw new Error("Usuario nao encontrado");
             }
             const userPost: CreatorIDPost = {
                 id: user.id,
                 name: user.name
             }
+            const arrayPostsDTO: PostDTO[] = postsDB.map((post) => {
+                return {
+                    id: post.id,
+                    content: post.content,
+                    likes: post.likes,
+                    dislikes: post.dislikes,
+                    createdAt: post.created_at,
+                    updatedAt: post.updated_at,
+                    creator: userPost
+                }
+            })
 
-            const arrayPostsDTO: PostDTO[] =
-                postsDB.map((post) => {
-                    return {
-                        id: post.id,
-                        content: post.content,
-                        likes: post.likes,
-                        dislikes: post.dislikes,
-                        createdAt: post.created_at,
-                        updatedAt: post.updated_at,
-                        creator: userPost
-                    }
-
-                })
-
-            res.send(arrayPostsDTO)
-
-
-
-
+            res.status(200).send(arrayPostsDTO)
 
         } catch (error) {
             console.log(error)
@@ -66,12 +61,18 @@ export class PostController {
             const idPost = req.body.id as string
 
             const postDatabase = new PostDatabase()
-            console.log(idUser)
+       
 
             if (typeof content !== "string") {
+                res.status(400)
                 throw new Error("Content deve ser uma string");
 
             }
+            if(content.length<5){
+                res.status(400)
+                throw new Error("Content deve ter ao menos 5 caracteres");                
+            }
+            
             const newPost = new Post(
                 idPost,
                 idUser,
@@ -132,7 +133,7 @@ export class PostController {
             )
             postToEdit.setContent(content)
             postToEdit.setUpdatedAt(nowDate)
-            const postEditedDB: PostToedit = {
+            const postEditedDB: PostToEdit = {
                 content: postToEdit.getContent(),
                 updated_at: nowDate
 
@@ -185,17 +186,21 @@ export class PostController {
 
     public async likeDislikePost(req: Request, res: Response) {
         try {
-            const idPost = req.params.idPost
             const idUser = req.params.id
+            const idPost = req.body.idPost as string
             const like = req.body.like as boolean
 
             const postDatabase = new PostDatabase()
 
+            if(typeof like!=="boolean"){
+                res.status(400)
+                throw new Error("Like deve ser um booleano");
+                
+            }
             const result = await postDatabase.findPostById(idPost)
-
-
             if (!result) {
-                throw new Error("result nao encontrado");
+                res.status(404)
+                throw new Error("Post nao encontrado");
 
             }
             const postToReact = new Post(
@@ -219,7 +224,7 @@ export class PostController {
             newPostReaction.setLike(like)
             let message: string = ""
 
-            const postReaction: LikesDeslikesDB | undefined = await postDatabase.findReactionOfUser(newPostReaction)
+            const postReaction: ReactionDB | undefined = await postDatabase.findReactionOfUser(newPostReaction)
 
             if (postReaction) {
                 if (postReaction.like) {
@@ -230,8 +235,8 @@ export class PostController {
                         postToReact.setDislikes(dislikes + 1)
                         message = "Thumbs down no post"
 
-                    } 
-                }else{
+                    }
+                } else {
                     if (like) {
                         const dislikes = postToReact.getDislikes()
                         const likes = postToReact.getLikes()
@@ -239,42 +244,34 @@ export class PostController {
                         postToReact.setDislikes(dislikes - 1)
                         message = "Thumbs down no post"
 
-                    } 
+                    }
                 }
-
-            }else{
+            } else {
                 if (like) {
                     const likes = postToReact.getLikes()
                     postToReact.setLikes(likes + 1)
                     message = "Joinha no post"
-    
+
                 } else {
                     const dislikes = postToReact.getDislikes()
                     postToReact.setDislikes(dislikes + 1)
                     message = "Thumbs down no post"
                 }
-
             }
-
-
-      
-
-            const newReactionDB: LikesDeslikesDB = {
+            const newReactionDB: ReactionDB = {
                 user_id: newPostReaction.getUserId(),
                 post_id: newPostReaction.getPostId(),
                 like: newPostReaction.getLike()
             }
-            const postEditReact: PostLikeDislikeDB = {
+            const postEditReact: ReactionEditedDB = {
                 likes: postToReact.getLikes(),
                 dislikes: postToReact.getDislikes()
             }
-            if(postReaction){
+            if (postReaction) {
                 await postDatabase.editReaction(newReactionDB)
-            }else{
+            } else {
                 await postDatabase.newReaction(newReactionDB)
             }
-
-         
             await postDatabase.addRemoveReaction(postEditReact, idPost)
 
             res.status(200).send({ message })

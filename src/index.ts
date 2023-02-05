@@ -38,8 +38,8 @@ const postController = new PostController()
 
 app.get("/users", usersController.viewAllUsers)
 
-app.post("/user", usersController.signUp)
-app.post("/users", usersController.login)
+app.post("/register", usersController.signUp)
+app.post("/login", usersController.login)
 
 app.get("/posts/:id", postController.getPosts )
 
@@ -47,7 +47,7 @@ app.post("/posts/:id", postController.createNewPost)
 app.patch("/posts/:id", postController.editPost)
 app.delete("/posts/:id", postController.deletePost)
 
-app.post("/users/:id/:idPost", postController.likeDislikePost)
+app.post("/users/:id/reactions", postController.likeDislikePost)
 
 
 
