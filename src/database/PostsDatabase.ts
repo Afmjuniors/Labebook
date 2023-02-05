@@ -1,6 +1,6 @@
 import { likeDislikePost } from "../models/LikeDislikePost";
 import { Post } from "../models/Post";
-import { LikesDeslikesDB, PostDB, PostLikeDislikeDB, PostToedit } from "../types";
+import { ReactionDB, PostDB, ReactionEditedDB, PostToEdit } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase{
@@ -36,7 +36,7 @@ export class PostDatabase extends BaseDatabase{
         .insert(newPost)
     }
 
-    public async editPost(post:PostToedit, id:string):Promise<void>{
+    public async editPost(post:PostToEdit, id:string):Promise<void>{
         await BaseDatabase
         .connection(PostDatabase.TABLE_POSTS)
         .update(post)
@@ -50,27 +50,27 @@ export class PostDatabase extends BaseDatabase{
         .where({id})
     }
 
-    public async addRemoveReaction(likes:PostLikeDislikeDB, id:string):Promise<void>{
+    public async addRemoveReaction(likes:ReactionEditedDB, id:string):Promise<void>{
         await BaseDatabase
         .connection(PostDatabase.TABLE_POSTS)
         .update(likes)
         .where({id})
     }
 
-    public async newReaction(likeDB:LikesDeslikesDB):Promise<void>{
+    public async newReaction(likeDB:ReactionDB):Promise<void>{
         await BaseDatabase
         .connection(PostDatabase.TABLE_LIKE)
         .insert(likeDB)
     }
-    public async editReaction(likeDB:LikesDeslikesDB):Promise<void>{
+    public async editReaction(likeDB:ReactionDB):Promise<void>{
         await BaseDatabase
         .connection(PostDatabase.TABLE_LIKE)
         .update({like:likeDB.like})
         .where({user_id:likeDB.user_id})
         .andWhere({post_id:likeDB.post_id})
     }
-    public async findReactionOfUser (reactioDTO:likeDislikePost):Promise<LikesDeslikesDB>{
-        const [result] :LikesDeslikesDB[] = await BaseDatabase
+    public async findReactionOfUser (reactioDTO:likeDislikePost):Promise<ReactionDB | undefined>{
+        const [result] :ReactionDB[] = await BaseDatabase
         .connection(PostDatabase.TABLE_LIKE)
         .where({user_id:reactioDTO.getUserId()})
         .andWhere({post_id:reactioDTO.getPostId()})

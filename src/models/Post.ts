@@ -13,7 +13,6 @@ export class Post{
     ){
     }
     public getId():string{return this.id}
-    public setId(id:string):void{this.id=id}
     
     public getCreatorId():string{return this.creatorId}
     
@@ -27,7 +26,6 @@ export class Post{
     public setDislikes(dislikes:number):void{this.dislikes=dislikes}
     
     public getCreatedAt():string{return this.createdAt}
-    public setCreatedAt(createdAt:string):void{this.createdAt=createdAt}
     
     public getUpdatedAt():string{return this.updatedAt}
     public setUpdatedAt(updatedAt:string):void{this.updatedAt=updatedAt}

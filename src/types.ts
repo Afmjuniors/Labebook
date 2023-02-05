@@ -40,18 +40,17 @@ export interface PostDTO  {
     creator: CreatorIDPost
 }
 
-export interface PostToedit{
+export interface PostToEdit{
     content:string,
-    updated_at:string
-}
+    updated_at:string}
 
 
-export interface LikesDeslikesDB{
+export interface ReactionDB{
     user_id:string,
     post_id:string,
     like: boolean
 }
-export interface PostLikeDislikeDB{
+export interface ReactionEditedDB{
     likes:number,
     dislikes:number
 }
