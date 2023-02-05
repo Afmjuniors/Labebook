@@ -1,22 +1,20 @@
+import { likeDislikePost } from "../models/LikeDislikePost";
 import { Post } from "../models/Post";
-import { LikesDeslikesDB, PostDB } from "../types";
+import { LikesDeslikesDB, PostDB, PostLikeDislikeDB, PostToedit } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase{
     public static TABLE_POSTS = "posts"
+    public static TABLE_LIKE = "likes_dislikes"
 
-    public async findPost(creatorId?:string, content?:string):Promise<PostDB[]>{
+    public async findPosts(creatorId?:string):Promise<PostDB[]>{
         let postsDB
         if(creatorId){
             const result: PostDB[] = await BaseDatabase
             .connection(PostDatabase.TABLE_POSTS)
-            .where({id:creatorId})
+            .where({creator_id:creatorId})
             postsDB= result
-        }else if(content){
-            const result: PostDB[] = await BaseDatabase
-            .connection(PostDatabase.TABLE_POSTS)
-            .where("content","LIKE",`%${content}%`)
-            postsDB= result
+        
         }else{
             const result: PostDB[] = await BaseDatabase
             .connection(PostDatabase.TABLE_POSTS)
@@ -25,7 +23,7 @@ export class PostDatabase extends BaseDatabase{
 
         return postsDB
     }
-    public async findPostById(id:string):Promise<PostDB>{
+    public async findPostById(id:string):Promise<PostDB | undefined>{
         const [result]: PostDB[] = await BaseDatabase
         .connection(PostDatabase.TABLE_POSTS)
         .where({id})
@@ -38,7 +36,7 @@ export class PostDatabase extends BaseDatabase{
         .insert(newPost)
     }
 
-    public async editPost(post:PostDB, id:string):Promise<void>{
+    public async editPost(post:PostToedit, id:string):Promise<void>{
         await BaseDatabase
         .connection(PostDatabase.TABLE_POSTS)
         .update(post)
@@ -50,6 +48,34 @@ export class PostDatabase extends BaseDatabase{
         .connection(PostDatabase.TABLE_POSTS)
         .del()
         .where({id})
+    }
+
+    public async addRemoveReaction(likes:PostLikeDislikeDB, id:string):Promise<void>{
+        await BaseDatabase
+        .connection(PostDatabase.TABLE_POSTS)
+        .update(likes)
+        .where({id})
+    }
+
+    public async newReaction(likeDB:LikesDeslikesDB):Promise<void>{
+        await BaseDatabase
+        .connection(PostDatabase.TABLE_LIKE)
+        .insert(likeDB)
+    }
+    public async editReaction(likeDB:LikesDeslikesDB):Promise<void>{
+        await BaseDatabase
+        .connection(PostDatabase.TABLE_LIKE)
+        .update({like:likeDB.like})
+        .where({user_id:likeDB.user_id})
+        .andWhere({post_id:likeDB.post_id})
+    }
+    public async findReactionOfUser (reactioDTO:likeDislikePost):Promise<LikesDeslikesDB>{
+        const [result] :LikesDeslikesDB[] = await BaseDatabase
+        .connection(PostDatabase.TABLE_LIKE)
+        .where({user_id:reactioDTO.getUserId()})
+        .andWhere({post_id:reactioDTO.getPostId()})
+
+        return result
     }
 
 

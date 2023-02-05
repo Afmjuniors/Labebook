@@ -5,8 +5,6 @@ CREATE TABLE users (
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role TEXT NOT NULL,
-    follows INTEGER DEFAULT(0) NOT NULL,
-    followed INTEGER DEFAULT(0) NOT NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -29,12 +27,6 @@ CREATE TABLE likes_dislikes(
     FOREIGN KEY (user_id) REFERENCES users(id)
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
-CREATE TABLE followers(
-followed_id TEXT NOT NULL,
-follow_id TEXT NOT NULL,
-FOREIGN KEY (followed_id) REFERENCES users(id)
-FOREIGN KEY (follow_id) REFERENCES users(id)
-);
 
 DROP TABLE users;
 DROP TABLE posts;
@@ -43,18 +35,18 @@ DROP TABLE followers;
 
 INSERT INTO users(id, name, email, password, role, created_at, updated_at)
 VALUES
-("u001","Alexandre Machado","alexandre@email.com","123456aA@","ADMIN","01/01/2023","01/01/2023"),
-("u002","Andre Ferreira","andre@email.com","123456aA@","USER","01/01/2023","01/01/2023"),
-("u003","Alex Campolina","alex@email.com","123456aA@","USER","01/01/2023","01/01/2023"),
-("u004","Camila Machado","camila@email.com","123456aA@","USER","01/01/2023","01/01/2023"),
-("u005","Alexandre Horta","alexandreHorta@email.com","123456aA@","USER","01/01/2023","01/01/2023");
+("u001","Alexandre Machado","alexandre@email.com","123456aA@","ADMIN","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
+("u002","Andre Ferreira","andre@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
+("u003","Alex Campolina","alex@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
+("u004","Camila Machado","camila@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
+("u005","Alexandre Horta","alexandreHorta@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z");
 
 INSERT INTO posts(id,creator_id, content, created_at, updated_at)
 VALUES
-("p001","u001","Texto de um comentario aleatorio","01/01/2023","01/01/2023"),
-("p002","u002","Texto de um comentario aleatorio 2","01/01/2023","01/01/2023"),
-("p003","u001","Texto de um comentario aleatorio 3","01/01/2023","01/01/2023"),
-("p004","u004","Texto de um comentario aleatorio 4","01/01/2023","01/01/2023");
+("p001","u001","Texto de um comentario aleatorio","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
+("p002","u002","Texto de um comentario aleatorio 2","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
+("p003","u001","Texto de um comentario aleatorio 3","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
+("p004","u004","Texto de um comentario aleatorio 4","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z");
 INSERT INTO likes_dislikes(user_id,post_id,like)
 VALUES
 ("u002","p001",0),

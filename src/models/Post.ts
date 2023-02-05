@@ -1,4 +1,5 @@
 import { appendFile } from "fs"
+import { CreatorIDPost } from "../types"
 
 export class Post{
     constructor(
@@ -6,15 +7,15 @@ export class Post{
        private creatorId:string,
        private content:string,
        private likes:number,
-       private deslikes:number,
+       private dislikes:number,
        private createdAt:string,
        private updatedAt:string
-    ){}
+    ){
+    }
     public getId():string{return this.id}
     public setId(id:string):void{this.id=id}
     
     public getCreatorId():string{return this.creatorId}
-    public setCreatorID(creatorId:string):void{this.creatorId=creatorId}
     
     public getContent():string{return this.content}
     public setContent(content:string):void{this.content=content}
@@ -22,8 +23,8 @@ export class Post{
     public getLikes():number{return this.likes}
     public setLikes(likes:number):void{this.likes=likes}
     
-    public getDeslikes():number{return this.deslikes}
-    public setDeslikes(deslikes:number):void{this.deslikes=deslikes}
+    public getDislikes():number{return this.dislikes}
+    public setDislikes(dislikes:number):void{this.dislikes=dislikes}
     
     public getCreatedAt():string{return this.createdAt}
     public setCreatedAt(createdAt:string):void{this.createdAt=createdAt}

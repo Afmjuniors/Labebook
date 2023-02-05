@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { UserController } from './controller/UserController'
-import { FollowsDatabase } from './database/FollowsDatabase'
+import { PostController } from './controller/PostController'
 
 
 const app = express()
@@ -15,12 +15,10 @@ app.listen(3003, () => {
 
 app.get("/ping", async (req: Request, res: Response) => {
     try {
-        const follow = new FollowsDatabase()
-
-        const result = await follow.findFollowersNumber("u002")
 
 
-        res.status(200).send(result)
+
+        res.status(200).send("pong!")
     } catch (error) {
         console.log(error)
 
@@ -36,12 +34,22 @@ app.get("/ping", async (req: Request, res: Response) => {
     }
 })
 const usersController = new UserController()
+const postController = new PostController()
 
-app.get("/users", usersController.getUsers)
-app.get("/users/:id", usersController.getUsersById)
-app.post("/users", usersController.createNewUser)
-app.patch("/users/:id", usersController.editUser)
-app.delete("/users/:id", usersController.deleteUserById)
+app.get("/users", usersController.viewAllUsers)
+
+app.post("/user", usersController.signUp)
+app.post("/users", usersController.login)
+
+app.get("/posts/:id", postController.getPosts )
+
+app.post("/posts/:id", postController.createNewPost)
+app.patch("/posts/:id", postController.editPost)
+app.delete("/posts/:id", postController.deletePost)
+
+app.post("/users/:id/:idPost", postController.likeDislikePost)
+
+
 
 
 

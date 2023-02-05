@@ -7,8 +7,6 @@ export class User{
         private email:string,
         private password:string,
         private role:Role,
-        private follows:number,
-        private followed:number,
         private createAt:string,
         private updateAt:string
     ){}
@@ -25,12 +23,6 @@ export class User{
 
         public getRole():Role{return this.role}
         public setRole(role:Role):void{this.role=role}
-
-        public getFollows():number{return this.follows}
-        public setFollows(follows:number):void{this.follows=follows}
-
-        public getFollowed():number{return this.followed}
-        public setFollowed(followed:number):void{this.followed=followed}
 
         public getCreateAt():string{return this.createAt}
 
