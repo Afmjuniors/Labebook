@@ -4,7 +4,7 @@ import { CreatorIDPost } from "../types"
 export class Post{
     constructor(
        private id:string,
-       private creator:CreatorIDPost,
+       private creatorId:string,
        private content:string,
        private likes:number,
        private dislikes:number,
@@ -15,7 +15,7 @@ export class Post{
     public getId():string{return this.id}
     public setId(id:string):void{this.id=id}
     
-    public getCreator():CreatorIDPost{return this.creator}
+    public getCreatorId():string{return this.creatorId}
     
     public getContent():string{return this.content}
     public setContent(content:string):void{this.content=content}

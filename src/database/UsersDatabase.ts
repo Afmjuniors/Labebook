@@ -1,5 +1,5 @@
 import { BaseDatabase } from "../database/BaseDatabase";
-import { UserDB, UserToEditDB } from "../types";
+import { UserDB } from "../types";
 
 export class UserDatabase extends BaseDatabase{
     private static TABLE_USERS ="users"
@@ -8,6 +8,11 @@ export class UserDatabase extends BaseDatabase{
             const [result]: UserDB[] = await BaseDatabase
             .connection(UserDatabase.TABLE_USERS)
             .where({email})    
+        return result
+    }
+    public async findAllUsers():Promise<UserDB[]>{
+        const result :UserDB[] = await BaseDatabase
+        .connection(UserDatabase.TABLE_USERS)
         return result
     }
     public async findeUserById(id:string): Promise<UserDB | undefined>{
@@ -23,7 +28,7 @@ export class UserDatabase extends BaseDatabase{
         .insert(newUser)
     }
 
-    public async editUser(user:UserToEditDB, idToEdit:string):Promise<void>{
+    public async editUser(user:UserDB, idToEdit:string):Promise<void>{
         await BaseDatabase
         .connection(UserDatabase.TABLE_USERS)
         .update(user)
