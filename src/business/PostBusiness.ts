@@ -1,11 +1,13 @@
 import { nowDate } from "../constants/patterns"
 import { PostDatabase } from "../database/PostsDatabase"
 import { UserDatabase } from "../database/UsersDatabase"
+import { BadRequestError } from "../error/BadRequestError"
+import { NotFoundError } from "../error/NoTFoundError"
 import { Post } from "../models/Post"
 import { CreatorIDPost, PostDB, PostDTO, PostToEdit, UserDB } from "../types"
 
 export class PostBusiness{
-    public getPosts =async (id:string) => {
+    public getPosts =async (id:string)  : Promise<{result:PostDTO[]}> => {
         const postDatabase = new PostDatabase()
         const userDatabase = new UserDatabase()
 
@@ -14,7 +16,7 @@ export class PostBusiness{
         const user: UserDB | undefined = await userDatabase.findeUserById(id)
         if (user === undefined) {
             // res.status(404)
-            throw new Error("Usuario nao encontrado");
+            throw new NotFoundError("Usuario nao encontrado");
         }
         const userPost: CreatorIDPost = {
             id: user.id,
@@ -35,9 +37,10 @@ export class PostBusiness{
         const output = {
            result: arrayPostsDTO
         }
+        return output
     }
 
-    public createNewPost =async (input:any) => {
+    public createNewPost =async (input:any) :Promise<{message:string}>=> {
         const {idUser,content,idPost} = input
 
         const postDatabase = new PostDatabase()
@@ -45,12 +48,12 @@ export class PostBusiness{
 
         if (typeof content !== "string") {
             // res.status(400)
-            throw new Error("Content deve ser uma string");
+            throw new BadRequestError("Content deve ser uma string");
 
         }
         if(content.length<5){
             // res.status(400)
-            throw new Error("Content deve ter ao menos 5 caracteres");                
+            throw new BadRequestError("Content deve ter ao menos 5 caracteres");                
         }
         
         const newPost = new Post(
@@ -79,7 +82,7 @@ export class PostBusiness{
         }
         return output
     }
-    public editPost =async (input:{idPost:string,content:string}) => {
+    public editPost =async (input:{idPost:string,content:string}): Promise<{message:string}> => {
 
         const {idPost,content} = input
         
@@ -87,7 +90,7 @@ export class PostBusiness{
 
         const result = await postDatabase.findPostById(idPost)
         if (!result) {
-            throw new Error("Post nao encontrado");
+            throw new BadRequestError("Post nao encontrado");
 
         }
         const postToEdit = new Post(
@@ -113,13 +116,13 @@ export class PostBusiness{
         }
         return output
     }
-    public deletePost =async (idToDelete:string) => {
+    public deletePost =async (idToDelete:string):Promise<{message:string}> => {
 
         const postDatabase = new PostDatabase()
 
         const result = await postDatabase.findPostById(idToDelete)
         if (!result) {
-            throw new Error("Post nao encontrado");
+            throw new BadRequestError("Post nao encontrado");
 
         }
         await postDatabase.deletePost(idToDelete)

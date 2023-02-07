@@ -1,23 +1,25 @@
 import { PostDatabase } from "../database/PostsDatabase";
+import { BadRequestError } from "../error/BadRequestError";
+import { NotFoundError } from "../error/NoTFoundError";
 import { likeDislikePost } from "../models/LikeDislikePost";
 import { Post } from "../models/Post";
 import { ReactionDB, ReactionEditedDB } from "../types";
 
 export class ReactionPostBusiness{
-    public reactionPost =async (input:any) => {
+    public reactionPost =async (input:any):Promise<{message:string}> => {
        const {idUser,idPost,like} = input
         
         const postDatabase = new PostDatabase()
 
         if(typeof like!=="boolean"){
             // res.status(400)
-            throw new Error("Like deve ser um booleano");
+            throw new BadRequestError("Like deve ser um booleano");
             
         }
         const result = await postDatabase.findPostById(idPost)
         if (!result) {
             // res.status(404)
-            throw new Error("Post nao encontrado");
+            throw new NotFoundError("Post nao encontrado");
 
         }
         const postToReact = new Post(
@@ -36,7 +38,7 @@ export class ReactionPostBusiness{
             like
         )
         if (typeof like !== "boolean") {
-            throw new Error("Tem que ser booleano");
+            throw new BadRequestError("Tem que ser booleano");
         }
         newPostReaction.setLike(like)
         let message: string = ""
@@ -59,7 +61,7 @@ export class ReactionPostBusiness{
                     const likes = postToReact.getLikes()
                     postToReact.setLikes(likes + 1)
                     postToReact.setDislikes(dislikes - 1)
-                    message = "Thumbs down no post"
+                    message = "Thumbs up no post"
 
                 }
             }
