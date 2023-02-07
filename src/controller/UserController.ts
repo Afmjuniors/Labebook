@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { UserBusiness } from "../business/UserBusiness";
 import { nowDate, regexEmail,regexPassword } from "../constants/patterns";
 import { UserDatabase } from "../database/UsersDatabase";
 import { User } from "../models/User";
@@ -8,42 +9,14 @@ export class UserController {
 
     public async signUp(req: Request, res: Response) {
         try {
-            const { id, name, email, password } = req.body as UserDTO
+            const input = req.body
+            const userBusiness = new UserBusiness()
 
-            const userDatabase = new UserDatabase()
 
-            if (!id || !name || !email || !password ){
-                throw new Error("Favor colocar email name e password");                
-            }
-            if(!email.match(regexEmail)){
-                res.status(400)
-                throw new Error("Email invalido");
-                
-            }
-            if(!password.match(regexPassword)){
-                res.status(400)
-                throw new Error("Password tem quer ter de 8 a 12 caracteres, um caracter especial pelomenos uma letra maiuscula e pelomenos uma letra minuscula");
-            }
-            const newUser = new User(
-                id,
-                name,
-                email,
-                password,
-                Role.USER,
-                nowDate,
-                nowDate
-            )
-            const newUserDB :UserDB = {
-                id:newUser.getId(),
-                name:newUser.getName(),
-                email:newUser.getEmail(),
-                password:newUser.getPassword(),
-                role:newUser.getRole(),
-                created_at:newUser.getCreateAt(),
-                updated_at:newUser.getUpdateAt()                
-            }
-            await userDatabase.insertNewUser(newUserDB)
-            res.status(201).send("Usuario criado com sucesso")
+            const output =await  userBusiness.signUp(input)          
+        
+        
+            res.status(201).send(output)
             
         } catch (error) {
             console.log(error)
@@ -64,27 +37,12 @@ export class UserController {
 
     public async login(req: Request, res: Response) {
         try {
-            const { email, password } = req.body
-            const userDatabase = new UserDatabase()
+            const input = req.body
+            const userBusiness = new UserBusiness()
+
+            const output = await userBusiness.login(input)
     
-            if (email.match(regexEmail)) {
-                const result = await userDatabase.findUser(email)
-                if (result) {
-                    if (password === result.password) {
-                        res.status(200).send("Login feito com sucesso")
-                    } else {
-                        throw new Error("Password Invalido");
-                    }        
-                }else{
-                    throw new Error("Usuario não encontrado");
-                    
-                }
-            }else{
-                res.status(400)
-                throw new Error("Email invalido");
-                
-            }
-    
+            res.status(200).send(output)
         } catch (error) {
             console.log(error)
 
@@ -103,10 +61,11 @@ export class UserController {
 
     public async viewAllUsers(req: Request, res: Response) {
         try {
-            const userDatabase = new UserDatabase()
-            const result = await userDatabase.findAllUsers()
+           const userBusiness = new UserBusiness()
 
-            res.status(200).send(result)
+           const output = await userBusiness.viewAllUsers()
+
+            res.status(200).send(output)
             
         } catch (error) {
             console.log(error)
