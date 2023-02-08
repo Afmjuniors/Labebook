@@ -1,7 +1,8 @@
 import { PostDatabase } from "../database/PostsDatabase";
+import { ReactionPostDatabase } from "../database/ReactionPostDatabase";
 import { BadRequestError } from "../error/BadRequestError";
 import { NotFoundError } from "../error/NoTFoundError";
-import { likeDislikePost } from "../models/LikeDislikePost";
+import { Reaction } from "../models/Reaction";
 import { Post } from "../models/Post";
 import { ReactionDB, ReactionEditedDB } from "../types";
 
@@ -10,6 +11,7 @@ export class ReactionPostBusiness{
        const {idUser,idPost,like} = input
         
         const postDatabase = new PostDatabase()
+        const reactionPostDatabase = new ReactionPostDatabase()
 
         if(typeof like!=="boolean"){
             // res.status(400)
@@ -32,7 +34,7 @@ export class ReactionPostBusiness{
             result.updated_at
         )
 
-        const newPostReaction = new likeDislikePost(
+        const newPostReaction = new Reaction(
             idUser,
             idPost,
             like
@@ -43,7 +45,7 @@ export class ReactionPostBusiness{
         newPostReaction.setLike(like)
         let message: string = ""
 
-        const postReaction: ReactionDB | undefined = await postDatabase.findReactionOfUser(newPostReaction)
+        const postReaction: ReactionDB | undefined = await reactionPostDatabase.findReactionOfUser(newPostReaction)
 
         if (postReaction) {
             if (postReaction.like) {
@@ -87,9 +89,9 @@ export class ReactionPostBusiness{
             dislikes: postToReact.getDislikes()
         }
         if (postReaction) {
-            await postDatabase.editReaction(newReactionDB)
+            await reactionPostDatabase.editReaction(newReactionDB)
         } else {
-            await postDatabase.newReaction(newReactionDB)
+            await reactionPostDatabase.newReaction(newReactionDB)
         }
         await postDatabase.addRemoveReaction(postEditReact, idPost)
 
@@ -98,4 +100,5 @@ export class ReactionPostBusiness{
         }
         return output
     }
+
 }

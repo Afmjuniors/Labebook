@@ -1,11 +1,10 @@
-import { likeDislikePost } from "../models/LikeDislikePost";
+import { Reaction } from "../models/Reaction";
 import { Post } from "../models/Post";
 import { ReactionDB, PostDB, ReactionEditedDB, PostToEdit } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase{
     public static TABLE_POSTS = "posts"
-    public static TABLE_LIKE = "likes_dislikes"
 
     public async findPosts(creatorId?:string):Promise<PostDB[]>{
         let postsDB
@@ -57,26 +56,7 @@ export class PostDatabase extends BaseDatabase{
         .where({id})
     }
 
-    public async newReaction(likeDB:ReactionDB):Promise<void>{
-        await BaseDatabase
-        .connection(PostDatabase.TABLE_LIKE)
-        .insert(likeDB)
-    }
-    public async editReaction(likeDB:ReactionDB):Promise<void>{
-        await BaseDatabase
-        .connection(PostDatabase.TABLE_LIKE)
-        .update({like:likeDB.like})
-        .where({user_id:likeDB.user_id})
-        .andWhere({post_id:likeDB.post_id})
-    }
-    public async findReactionOfUser (reactioDTO:likeDislikePost):Promise<ReactionDB | undefined>{
-        const [result] :ReactionDB[] = await BaseDatabase
-        .connection(PostDatabase.TABLE_LIKE)
-        .where({user_id:reactioDTO.getUserId()})
-        .andWhere({post_id:reactioDTO.getPostId()})
 
-        return result
-    }
 
 
 

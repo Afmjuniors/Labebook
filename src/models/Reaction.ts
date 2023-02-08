@@ -1,4 +1,4 @@
-export class likeDislikePost{
+export class Reaction{
     constructor(
         private userId:string,
         private postId:string,
