@@ -1,28 +1,30 @@
 import { nowDate } from "../constants/patterns"
 import { PostDatabase } from "../database/PostsDatabase"
 import { UserDatabase } from "../database/UsersDatabase"
+import { PostOutputDTO, GetPostOutputDTO, PostDTO, CreatePostInputDTO, EditPostInputDTO } from "../dto/PostDTO"
 import { BadRequestError } from "../error/BadRequestError"
 import { NotFoundError } from "../error/NoTFoundError"
 import { Post } from "../models/Post"
-import { CreatorIDPost, PostDB, PostDTO, PostToEdit, UserDB } from "../types"
+import { CreatorIDPost, PostDB,  PostToEdit, UserDB } from "../types"
 
 export class PostBusiness{
-    public getPosts =async (id:string)  : Promise<{result:PostDTO[]}> => {
-        const postDatabase = new PostDatabase()
-        const userDatabase = new UserDatabase()
-
-
-        const postsDB = await postDatabase.findPosts(id)
-        const user: UserDB | undefined = await userDatabase.findeUserById(id)
+    constructor(
+        private postDTO:PostDTO,
+        private postDatabase:PostDatabase,
+        private userDatabase:UserDatabase
+    ){}
+    public getPosts =async (id:string)  : Promise<{result:GetPostOutputDTO[]}> => {
+        
+        const postsDB = await this.postDatabase.findPosts(id)
+        const user: UserDB | undefined = await this.userDatabase.findeUserById(id)
         if (user === undefined) {
-            // res.status(404)
             throw new NotFoundError("Usuario nao encontrado");
         }
         const userPost: CreatorIDPost = {
             id: user.id,
             name: user.name
         }
-        const arrayPostsDTO: PostDTO[] = postsDB.map((post) => {
+        const arrayPostsDTO: GetPostOutputDTO[] = postsDB.map((post) => {
             return {
                 id: post.id,
                 content: post.content,
@@ -40,19 +42,10 @@ export class PostBusiness{
         return output
     }
 
-    public createNewPost =async (input:any) :Promise<{message:string}>=> {
+    public createNewPost =async (input:any) :Promise<PostOutputDTO>=> {
         const {idUser,content,idPost} = input
 
-        const postDatabase = new PostDatabase()
-       
-
-        if (typeof content !== "string") {
-            // res.status(400)
-            throw new BadRequestError("Content deve ser uma string");
-
-        }
         if(content.length<5){
-            // res.status(400)
             throw new BadRequestError("Content deve ter ao menos 5 caracteres");                
         }
         
@@ -75,20 +68,19 @@ export class PostBusiness{
             updated_at: newPost.getUpdatedAt()
         }
 
-        await postDatabase.createNewPost(newPostDB)
+        await this.postDatabase.createNewPost(newPostDB)
 
-        const output = {
-            message: "Post criado com sucesso"
-        }
+        const output = this.postDTO.CreatePostOutputDTO(newPost)
+  
         return output
     }
-    public editPost =async (input:{idPost:string,content:string}): Promise<{message:string}> => {
+    public editPost =async (input:EditPostInputDTO): Promise<PostOutputDTO> => {
 
         const {idPost,content} = input
         
-        const postDatabase = new PostDatabase()
+        
 
-        const result = await postDatabase.findPostById(idPost)
+        const result = await this.postDatabase.findPostById(idPost)
         if (!result) {
             throw new BadRequestError("Post nao encontrado");
 
@@ -109,23 +101,24 @@ export class PostBusiness{
             updated_at: nowDate
 
         }
-        await postDatabase.editPost(postEditedDB, idPost)
+        await this.postDatabase.editPost(postEditedDB, idPost)
 
-        const output = {
-            message:"Post atualizado com sucesso"
-        }
+        
+
+        const output = this.postDTO.EditPostOutputDTO(postToEdit)
+
         return output
     }
     public deletePost =async (idToDelete:string):Promise<{message:string}> => {
 
-        const postDatabase = new PostDatabase()
+        
 
-        const result = await postDatabase.findPostById(idToDelete)
+        const result = await this.postDatabase.findPostById(idToDelete)
         if (!result) {
             throw new BadRequestError("Post nao encontrado");
 
         }
-        await postDatabase.deletePost(idToDelete)
+        await this.postDatabase.deletePost(idToDelete)
         const output = {
             message:"Post deletado com sucesso"
         }

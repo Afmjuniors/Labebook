@@ -4,19 +4,23 @@ import { ReactionPostBusiness } from "../business/ReactionPostBusiness"
 import { nowDate } from "../constants/patterns"
 import { PostDatabase } from "../database/PostsDatabase"
 import { UserDatabase } from "../database/UsersDatabase"
+import { PostDTO } from "../dto/PostDTO"
 import { BaseError } from "../error/BaseError"
-import { likeDislikePost } from "../models/Reaction"
 import { Post } from "../models/Post"
-import { CreatorIDPost, ReactionDB, PostDB, PostDTO, ReactionEditedDB, PostToEdit, UserDB } from "../types"
+import { CreatorIDPost, ReactionDB, PostDB,  ReactionEditedDB, PostToEdit, UserDB } from "../types"
 
 export class PostController {
+    constructor(
+        private postDTO:PostDTO,
+        private postBusiness: PostBusiness
+    ){}
 
     public async getPosts(req: Request, res: Response) {
         try {
             const input = req.params.id
-            const postBusiness = new PostBusiness()
+            
 
-            const output = await postBusiness.getPosts(input)
+            const output = await this.postBusiness.getPosts(input)
           
 
             res.status(200).send(output)
@@ -35,14 +39,15 @@ export class PostController {
     public async createNewPost(req: Request, res: Response) {
         try {
 
-            const input ={
-                 idUser:req.params.id,
-                 content:req.body.content,
-                 idPost:req.body.id
-            }
-            const postBusiness = new PostBusiness()
+            const input = this.postDTO.CreatePostInputDTO(
+                req.params.id,
+                req.body.id,
+                req.body.content
+            )
+          
+            
 
-            const output = postBusiness.createNewPost(input)
+            const output = await this.postBusiness.createNewPost(input)
 
            
             res.status(201).send(output)
@@ -61,13 +66,13 @@ export class PostController {
 
     public async editPost(req: Request, res: Response) {
         try {
-            const input={
-                idPost: req.params.id,
-                content: req.body.content
-            }
-            const postBusiness = new PostBusiness()
-
-            const output = await postBusiness.editPost(input)          
+       
+            const input = this.postDTO.EditPostInputDTO(
+                req.params.id,
+                req.body.content
+            )
+            
+            const output = await this.postBusiness.editPost(input)          
 
             res.status(200).send(output)
 
@@ -85,9 +90,9 @@ export class PostController {
     public async deletePost(req: Request, res: Response) {
         try {
             const input = req.params.id
-            const postBusiness = new PostBusiness()
+            
 
-            const output = postBusiness.deletePost(input)
+            const output = await this.postBusiness.deletePost(input)
            
             res.status(200).send(output)
 

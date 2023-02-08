@@ -4,6 +4,9 @@ import { BaseError } from "../error/BaseError"
 import { Reaction } from "../models/Reaction"
 
 export class ReactionPostController{
+    constructor(
+        private reactionPostBusiness: ReactionPostBusiness
+    ){}
     public async reactionPost(req: Request, res: Response) {
         try {
 
@@ -12,9 +15,8 @@ export class ReactionPostController{
                  req.body.idPost,  
                  req.body.like 
             )
-            const reactionPostBusiness = new ReactionPostBusiness()
             
-            const output = reactionPostBusiness.reactionPost(input)
+            const output = this.reactionPostBusiness.reactionPost(input)
 
             res.status(200).send(output)
 

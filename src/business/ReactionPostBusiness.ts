@@ -7,18 +7,22 @@ import { Post } from "../models/Post";
 import { ReactionDB, ReactionEditedDB } from "../types";
 
 export class ReactionPostBusiness{
+    constructor(
+        private postDatabase: PostDatabase,
+        private reactionPostDatabase: ReactionPostDatabase
+    ){}
     public reactionPost =async (input:any):Promise<{message:string}> => {
        const {idUser,idPost,like} = input
         
-        const postDatabase = new PostDatabase()
-        const reactionPostDatabase = new ReactionPostDatabase()
+       
+       
 
         if(typeof like!=="boolean"){
             // res.status(400)
             throw new BadRequestError("Like deve ser um booleano");
             
         }
-        const result = await postDatabase.findPostById(idPost)
+        const result = await this.postDatabase.findPostById(idPost)
         if (!result) {
             // res.status(404)
             throw new NotFoundError("Post nao encontrado");
@@ -45,7 +49,7 @@ export class ReactionPostBusiness{
         newPostReaction.setLike(like)
         let message: string = ""
 
-        const postReaction: ReactionDB | undefined = await reactionPostDatabase.findReactionOfUser(newPostReaction)
+        const postReaction: ReactionDB | undefined = await this.reactionPostDatabase.findReactionOfUser(newPostReaction)
 
         if (postReaction) {
             if (postReaction.like) {
@@ -89,11 +93,11 @@ export class ReactionPostBusiness{
             dislikes: postToReact.getDislikes()
         }
         if (postReaction) {
-            await reactionPostDatabase.editReaction(newReactionDB)
+            await this.reactionPostDatabase.editReaction(newReactionDB)
         } else {
-            await reactionPostDatabase.newReaction(newReactionDB)
+            await this.reactionPostDatabase.newReaction(newReactionDB)
         }
-        await postDatabase.addRemoveReaction(postEditReact, idPost)
+        await this.postDatabase.addRemoveReaction(postEditReact, idPost)
 
         const output = {
             message
