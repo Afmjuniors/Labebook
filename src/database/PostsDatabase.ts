@@ -1,6 +1,4 @@
-import { Reaction } from "../models/Reaction";
-import { Post } from "../models/Post";
-import { ReactionDB, PostDB, ReactionEditedDB, PostToEdit } from "../types";
+import {  PostDB, ReactionEditedDB, PostToEdit } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase{

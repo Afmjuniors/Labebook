@@ -1,7 +1,7 @@
 import { nowDate } from "../constants/patterns"
 import { PostDatabase } from "../database/PostsDatabase"
 import { UserDatabase } from "../database/UsersDatabase"
-import { PostOutputDTO, GetPostOutputDTO, PostDTO, CreatePostInputDTO, EditPostInputDTO } from "../dto/PostDTO"
+import { PostOutputDTO, GetPostOutputDTO, PostDTO,  EditPostInputDTO } from "../dto/PostDTO"
 import { BadRequestError } from "../error/BadRequestError"
 import { NotFoundError } from "../error/NoTFoundError"
 import { Post } from "../models/Post"

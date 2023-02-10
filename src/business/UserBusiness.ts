@@ -14,8 +14,6 @@ export class UserBusiness {
     public signUp = async (input: SignUpInputDTO): Promise<SignUpOutputDTO> => {
         const { id, name, email, password } = input
 
-
-
         if (!email.match(regexEmail)) {
             throw new BadRequestError("Email invalido");
 

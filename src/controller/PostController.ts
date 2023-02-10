@@ -1,13 +1,7 @@
 import { Request, Response } from "express"
 import { PostBusiness } from "../business/PostBusiness"
-import { ReactionPostBusiness } from "../business/ReactionPostBusiness"
-import { nowDate } from "../constants/patterns"
-import { PostDatabase } from "../database/PostsDatabase"
-import { UserDatabase } from "../database/UsersDatabase"
 import { PostDTO } from "../dto/PostDTO"
 import { BaseError } from "../error/BaseError"
-import { Post } from "../models/Post"
-import { CreatorIDPost, ReactionDB, PostDB,  ReactionEditedDB, PostToEdit, UserDB } from "../types"
 
 export class PostController {
     constructor(

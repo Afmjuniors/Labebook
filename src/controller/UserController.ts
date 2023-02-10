@@ -1,12 +1,7 @@
 import { Request, Response } from "express";
-import { ReactionPostBusiness } from "../business/ReactionPostBusiness";
 import { UserBusiness } from "../business/UserBusiness";
-import { nowDate, regexEmail,regexPassword } from "../constants/patterns";
-import { UserDatabase } from "../database/UsersDatabase";
 import { UserDTO } from "../dto/UserDTO";
 import { BaseError } from "../error/BaseError";
-import { User } from "../models/User";
-import { Role, UserDB } from "../types";
 
 export class UserController {
     constructor(
