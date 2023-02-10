@@ -1,26 +1,24 @@
 import { nowDate, regexEmail, regexPassword } from "../constants/patterns";
 import { UserDatabase } from "../database/UsersDatabase";
+import { SignUpInputDTO, SignUpOutputDTO, UserDTO } from "../dto/UserDTO";
 import { BadRequestError } from "../error/BadRequestError";
 import { NotFoundError } from "../error/NoTFoundError";
 import { User } from "../models/User";
-import { Role, UserDB, UserDTO } from "../types"
+import { Role, UserDB } from "../types"
 
-export class UserBusiness{
-    public signUp =async (input:UserDTO) : Promise<{message:string,usuario:User}> => {
+export class UserBusiness {
+    constructor(
+        private userDTO: UserDTO,
+        private userDatabase: UserDatabase
+    ) { }
+    public signUp = async (input: SignUpInputDTO): Promise<SignUpOutputDTO> => {
         const { id, name, email, password } = input
 
-        const userDatabase = new UserDatabase()
-    
-        if (!id || !name || !email || !password ){
-            throw new BadRequestError("Favor colocar email name e password");                
-        }
-        if(!email.match(regexEmail)){
-            // res.status(400)
+        if (!email.match(regexEmail)) {
             throw new BadRequestError("Email invalido");
-            
+
         }
-        if(!password.match(regexPassword)){
-            // res.status(400)
+        if (!password.match(regexPassword)) {
             throw new BadRequestError("Password tem quer ter de 8 a 12 caracteres, um caracter especial pelomenos uma letra maiuscula e pelomenos uma letra minuscula");
         }
         const newUser = new User(
@@ -32,54 +30,46 @@ export class UserBusiness{
             nowDate,
             nowDate
         )
-        const newUserDB :UserDB = {
-            id:newUser.getId(),
-            name:newUser.getName(),
-            email:newUser.getEmail(),
-            password:newUser.getPassword(),
-            role:newUser.getRole(),
-            created_at:newUser.getCreateAt(),
-            updated_at:newUser.getUpdateAt()                
+        const newUserDB: UserDB = {
+            id: newUser.getId(),
+            name: newUser.getName(),
+            email: newUser.getEmail(),
+            password: newUser.getPassword(),
+            role: newUser.getRole(),
+            created_at: newUser.getCreateAt(),
+            updated_at: newUser.getUpdateAt()
         }
-        await userDatabase.insertNewUser(newUserDB)
-    
-        const output = {
-            message:"Usuario criado com sucesso",
-            usuario:newUser
-        }
-    
+        await this.userDatabase.insertNewUser(newUserDB)
+
+        const output = this.userDTO.signUpOutputDTO(newUser)
+
         return output
     }
-    public login =async (input:any): Promise<{message:string}> => {
+    public login = async (input: any): Promise<{ message: string }> => {
         const { email, password } = input
-        const userDatabase = new UserDatabase()
 
-        if (email.match(regexEmail)) {
-            const result = await userDatabase.findUser(email)
-            if (result) {
-                if (password === result.password) {
-                    // res.status(200).send("Login feito com sucesso")
-                    const output = {
-                        message:'Login efetuado com sucesso'
-                    }
-                    return output
-                } else {
-                    throw new BadRequestError("Password Invalido");
-                }        
-            }else{
-                throw new NotFoundError("Usuario não encontrado");
-                
-            }
-        }else{
-            // res.status(400)
+
+        if (!email.match(regexEmail)) {
             throw new BadRequestError("Email invalido");
-            
+        } else {
+            const result = await this.userDatabase.findUser(email)
+            if (!result) {
+                throw new NotFoundError("Usuario não encontrado");
+            } else {
+                if (password !== result.password) {
+                    throw new BadRequestError("Password Invalido");
+                } else {
+                    const output = this.userDTO.LoginOutputDTO()
+                    return output
+                }
+            }
+
         }
     }
 
-    public viewAllUsers =async ():Promise<UserDB[]> => {
-        const userDatabase = new UserDatabase()
-        const output = await userDatabase.findAllUsers()
+    public viewAllUsers = async (): Promise<UserDB[]> => {
+
+        const output = await this.userDatabase.findAllUsers()
         return output
     }
 }

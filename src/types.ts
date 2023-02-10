@@ -12,13 +12,6 @@ export interface UserDB{
     created_at:string,
     updated_at:string
 }
-export interface UserDTO{
-    id:string,
-    name:string,
-    email:string,
-    password:string,
-    role:Role
-}
 
 
 export interface PostDB{
