@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
+import { userRouter } from './routers/userRouter'
 
 
 
@@ -14,5 +15,5 @@ app.listen(3003, () => {
 
 
 
-
+app.use("/users", userRouter)
 
