@@ -3,23 +3,10 @@ import { ReactionPostBusiness } from '../business/ReactionPostBusiness'
 import { UserBusiness } from '../business/UserBusiness'
 import { ReactionPostController } from '../controller/ReactionPostController'
 import { UserController } from '../controller/UserController'
-import { PostDatabase } from '../database/PostsDatabase'
-import { ReactionPostDatabase } from '../database/ReactionPostDatabase'
 
 export const userRouter = express.Router()
-
-const userController = new UserController(
-    new UserBusiness(),
-    new ReactionPostBusiness(
-        new PostDatabase(),
-        new ReactionPostDatabase()
-    )
-)
-// const reactionPostController = new ReactionPostController(
-//     new ReactionPostBusiness(
-//         new PostDatabase(),
-//         new ReactionPostDatabase()
-// )
+const userController = new UserController()
+const reactionPostController = new ReactionPostController()
 
 userRouter.get("/", userController.viewAllUsers)
 

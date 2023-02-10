@@ -6,7 +6,11 @@ import { Reaction } from "../models/Reaction"
 export class ReactionPostController{
     constructor(
         private reactionPostBusiness: ReactionPostBusiness
+<<<<<<< HEAD
         ){}
+=======
+    ){}
+>>>>>>> ce8ce0e6d1f881283662d5bf2790b700a3420dc7
     public async reactionPost(req: Request, res: Response) {
         try {
 
@@ -16,7 +20,11 @@ export class ReactionPostController{
                  req.body.like 
             )
             
+<<<<<<< HEAD
             const output = await this.reactionPostBusiness.reactionPost(input)
+=======
+            const output = this.reactionPostBusiness.reactionPost(input)
+>>>>>>> ce8ce0e6d1f881283662d5bf2790b700a3420dc7
 
             res.status(200).send(output)
 

@@ -14,6 +14,12 @@ export class ReactionPostBusiness{
     public reactionPost =async (input:any):Promise<{message:string}> => {
        const {idUser,idPost,like} = input
         
+<<<<<<< HEAD
+=======
+       
+       
+
+>>>>>>> ce8ce0e6d1f881283662d5bf2790b700a3420dc7
         if(typeof like!=="boolean"){
             // res.status(400)
             throw new BadRequestError("Like deve ser um booleano");

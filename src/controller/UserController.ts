@@ -1,19 +1,39 @@
 import { Request, Response } from "express";
-import { ReactionPostBusiness } from "../business/ReactionPostBusiness";
 import { UserBusiness } from "../business/UserBusiness";
+<<<<<<< HEAD
+=======
+import { UserDTO } from "../dto/UserDTO";
+>>>>>>> ce8ce0e6d1f881283662d5bf2790b700a3420dc7
 import { BaseError } from "../error/BaseError";
 
 export class UserController {
     constructor(
+<<<<<<< HEAD
         private userBusiness: UserBusiness,
         private reactionPostBusiness : ReactionPostBusiness
+=======
+        private userDTO: UserDTO,
+        private userBusiness:UserBusiness
+>>>>>>> ce8ce0e6d1f881283662d5bf2790b700a3420dc7
     ){}
 
     public async signUp(req: Request, res: Response) {
         try {
+<<<<<<< HEAD
             const input = req.body
 
             const output =await  this.userBusiness.signUp(input)          
+=======
+            const input = this.userDTO.signUpInputDTO(
+                req.body.id,
+                req.body.name,
+                req.body.email,
+                req.body.password
+            )
+           
+
+            const output =await this.userBusiness.signUp(input)          
+>>>>>>> ce8ce0e6d1f881283662d5bf2790b700a3420dc7
         
             res.status(201).send(output)
             
@@ -33,9 +53,9 @@ export class UserController {
     public async login(req: Request, res: Response) {
         try {
             const input = req.body
-            const userBusiness = new UserBusiness()
+           
 
-            const output = await userBusiness.login(input)
+            const output = await this.userBusiness.login(input)
     
             res.status(200).send(output)
         } catch (error) {
@@ -52,9 +72,9 @@ export class UserController {
 
     public async viewAllUsers(req: Request, res: Response) {
         try {
-           const userBusiness = new UserBusiness()
+          
 
-           const output = await userBusiness.viewAllUsers()
+           const output = await this.userBusiness.viewAllUsers()
 
             res.status(200).send(output)
             
@@ -69,6 +89,7 @@ export class UserController {
         }
     }
 
+<<<<<<< HEAD
     public async reactionPost(req: Request, res: Response) {
         try {
 
@@ -92,6 +113,9 @@ export class UserController {
             }
         }
     }
+=======
+   
+>>>>>>> ce8ce0e6d1f881283662d5bf2790b700a3420dc7
     }
  
 

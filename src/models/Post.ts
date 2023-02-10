@@ -1,5 +1,3 @@
-import { appendFile } from "fs"
-import { CreatorIDPost } from "../types"
 
 export class Post{
     constructor(
