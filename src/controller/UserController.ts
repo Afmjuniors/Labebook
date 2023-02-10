@@ -1,20 +1,19 @@
 import { Request, Response } from "express";
 import { ReactionPostBusiness } from "../business/ReactionPostBusiness";
 import { UserBusiness } from "../business/UserBusiness";
-import { nowDate, regexEmail,regexPassword } from "../constants/patterns";
-import { UserDatabase } from "../database/UsersDatabase";
 import { BaseError } from "../error/BaseError";
-import { User } from "../models/User";
-import { Role, UserDB, UserDTO } from "../types";
 
 export class UserController {
+    constructor(
+        private userBusiness: UserBusiness,
+        private reactionPostBusiness : ReactionPostBusiness
+    ){}
 
     public async signUp(req: Request, res: Response) {
         try {
             const input = req.body
-            const userBusiness = new UserBusiness()
 
-            const output =await  userBusiness.signUp(input)          
+            const output =await  this.userBusiness.signUp(input)          
         
             res.status(201).send(output)
             
@@ -78,9 +77,8 @@ export class UserController {
                 idPost: req.body.idPost,  
                 like: req.body.like 
             }
-            const reactionPostBusiness = new ReactionPostBusiness()
             
-            const output = reactionPostBusiness.reactionPost(input)
+            const output = await this.reactionPostBusiness.reactionPost(input)
 
             res.status(200).send(output)
 
