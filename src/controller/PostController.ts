@@ -98,6 +98,27 @@ export class PostController{
 
     }
     public reactionPost = async (req:Request,res:Response)=>{
-        const id = req.params.id
+        try {
+
+            const ids ={
+                idPost:req.params.id,
+                idUser:req.body.idUser
+            }
+            const input = this.postDTO.PostReactionInputDTO(req.body.like)
+    
+            const output = await this.postBusiness.reactionPost(input,ids)
+
+            res.status(200).send(output)
+            
+        } catch (error) {
+            console.log(error)
+        
+            if (error instanceof BaseError) {
+                res.status(500).send(error.message)
+            } else {
+                res.status(500).send("Erro inesperado")
+            }
+        }
+
     }
 }

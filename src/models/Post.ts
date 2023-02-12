@@ -20,10 +20,10 @@ export class Post{
     public setContent(content:string):void{this.content=content}
     
     public getLikes():number{return this.likes}
-    public setLikes(likes:number):void{this.likes=likes}
+    public setLikes(value:number):void{this.likes+=value}
     
     public getDislikes():number{return this.dislikes}
-    public setDislikes(dislikes:number):void{this.dislikes=dislikes}
+    public setDislikes(value:number):void{this.dislikes+=value}
     
     public getCreatedAt():string{return this.createdAt}
     public setCreatedAt(createdAt:string):void{this.createdAt=createdAt}
