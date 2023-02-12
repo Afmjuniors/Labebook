@@ -3,7 +3,17 @@ export enum Role {
     USER="USER"
 }
 
-export interface UserDB{
+export interface UserOutput{ 
+    id:string,
+    name:string,
+    email:string,
+    role:Role,
+    createdAt:string,
+    updatedAt:string
+
+}
+
+export interface UserDB {
     id:string,
     name:string,
     email:string,
@@ -12,8 +22,6 @@ export interface UserDB{
     created_at:string,
     updated_at:string
 }
-
-
 export interface PostDB{
     id:string,
     creator_id:string,
@@ -23,37 +31,8 @@ export interface PostDB{
     created_at:string,
     updated_at:string
 }
-export interface PostDTO  {
-    id: string,
-    content: string,
-    likes: number,
-    dislikes:number,
-    createdAt: string,
-    updatedAt: string,
-    creator: CreatorIDPost
-}
-
-export interface PostToEdit{
+export interface PostEditDB{
     content:string,
-    updated_at:string}
-
-
-export interface ReactionDB{
-    user_id:string,
-    post_id:string,
-    like: boolean
+    updated_at:string
 }
-export interface ReactionEditedDB{
-    likes:number,
-    dislikes:number
-}
-
-export interface CreatorIDPost{
-    id:string
-    name:string,
-}
-
-
-
-
 

@@ -67,3 +67,4 @@ VALUES
 ("u002","u004");
 
 
+SELECT * FROM users;
