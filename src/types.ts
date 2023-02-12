@@ -32,7 +32,15 @@ export interface PostDB{
     updated_at:string
 }
 export interface PostEditDB{
-    content:string,
-    updated_at:string
+    content?:string,
+    likes?:number,
+    dislikes?:number,
+    updated_at?:string
+}
+
+export interface Reaction{
+    user_id:string,
+    post_id:string,
+    like:boolean
 }
 

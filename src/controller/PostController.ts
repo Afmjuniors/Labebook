@@ -99,11 +99,15 @@ export class PostController{
     }
     public reactionPost = async (req:Request,res:Response)=>{
         try {
-            const id = req.params.id
+
+            const ids ={
+                idPost:req.params.id,
+                idUser:req.body.idUser
+            }
             const input = this.postDTO.PostReactionInputDTO(req.body.like)
     
-            const output = await this.postBusiness.reactionPost(input)
-            
+            const output = await this.postBusiness.reactionPost(input,ids)
+
             res.status(200).send(output)
             
         } catch (error) {

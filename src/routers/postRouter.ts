@@ -27,7 +27,7 @@ const postControllet = new PostController(
 postRouter.get('/', postControllet.getPosts)
 postRouter.post('/', postControllet.createPost)
 
-postRouter.patch('/:id/user', postControllet.reactionPost) //reaction
+postRouter.patch('/:id/reaction', postControllet.reactionPost) //reaction
 
 postRouter.patch('/:id', postControllet.editPost)
 
