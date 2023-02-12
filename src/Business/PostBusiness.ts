@@ -1,5 +1,6 @@
 import { nowDate } from "../constants/patterns";
 import { PostDatabase } from "../database/PostDatabase";
+import { ReactionDatabase } from "../database/ReactionDatabase";
 import { UserDatabase } from "../database/UserDatabase";
 import { PostsOutputDTO, PostsDTO, CreatePostOutputDTO } from "../dto/PostDTO";
 import { BadRequestError } from "../error/BadRequestError";
@@ -11,7 +12,8 @@ export class PostBusiness{
     constructor(
         private postDTO: PostsDTO,
         private postDatabase: PostDatabase,
-        private userDatabase: UserDatabase
+        private userDatabase: UserDatabase,
+        private reactionDatabase: ReactionDatabase,
     ){}
 
     public getPosts = async (input:string | undefined):Promise<PostsOutputDTO[]>=>{
@@ -107,6 +109,11 @@ export class PostBusiness{
         await this.postDatabase.deletePostById(id)
         return{
             message:"Post deletado com sucesso"
+        }
+    }
+    public reactionPost =async (like:boolean) => {
+        {
+            
         }
     }
 }

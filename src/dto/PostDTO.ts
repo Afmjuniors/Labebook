@@ -18,6 +18,9 @@ export interface CreatePostOutputDTO{
     message:string,
     post:PostsOutputDTO
 }
+export interface ReactionPostOutputDTO{
+    message:string
+}
 
 
 
@@ -38,6 +41,19 @@ export class PostsDTO{
             post: post.toPostOutput()
         }
         return dto
+    }
+    public PostReactionInputDTO = (like:unknown):boolean | undefined=>{
+       if(like!==undefined){
+           if(typeof like !== 'boolean'){
+               throw new BadRequestError("'like' deve ser um booleano")
+            }
+        }
+        return like
+    }
+    public PostReactionOuputDTO = (message:string):ReactionPostOutputDTO=>{
+        return{
+            message:message
+        }
     }
 
 }

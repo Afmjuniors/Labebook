@@ -4,6 +4,7 @@ import { UserBusiness } from "../Business/UserBusiness"
 import { PostController } from "../controller/PostController"
 import { UserControler } from "../controller/UserController"
 import { PostDatabase } from "../database/PostDatabase"
+import { ReactionDatabase } from "../database/ReactionDatabase"
 import { UserDatabase } from "../database/UserDatabase"
 import { PostsDTO } from "../dto/PostDTO"
 import { UserDTO } from "../dto/UserDTO"
@@ -18,7 +19,8 @@ const postControllet = new PostController(
     new PostBusiness(
         postsDTO,
         new PostDatabase(),
-        new UserDatabase()
+        new UserDatabase(),
+        new ReactionDatabase()
     )
 )
 
