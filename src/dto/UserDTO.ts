@@ -1,6 +1,6 @@
 import { BadRequestError } from "../error/BadRequestError";
 import { User } from "../models/User";
-import { Role,  UserOutput } from "../types";
+import { Roles,  UserOutput } from "../types";
 
 
 export interface GetUsersOutputDTO{
@@ -9,7 +9,7 @@ export interface GetUsersOutputDTO{
         id:string,
         name:string,
         email:string,
-        role:Role,
+        role:Roles,
         createdAt:string,
         updatedAt:string
 
@@ -28,7 +28,7 @@ export interface CreateUserOutputDTO{
         id:string,
         name:string,
         email:string,
-        role:Role,
+        role:Roles,
         createdAt:string,
         updatedAt:string
 

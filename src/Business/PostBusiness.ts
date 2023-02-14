@@ -6,6 +6,7 @@ import { PostsOutputDTO, PostsDTO, CreatePostOutputDTO, PostReactionOutputDTO } 
 import { BadRequestError } from "../error/BadRequestError";
 import { NotFoundError } from "../error/NoTFoundError";
 import { Post } from "../models/Post";
+import { IdGenerator } from "../services/IdGenerator";
 import { PostDB, PostEditDB, Reaction, UserDB } from "../types";
 
 export class PostBusiness {
@@ -14,6 +15,7 @@ export class PostBusiness {
         private postDatabase: PostDatabase,
         private userDatabase: UserDatabase,
         private reactionDatabase: ReactionDatabase,
+        private idGenerator:IdGenerator
     ) { }
 
     public getPosts = async (input: string | undefined): Promise<PostsOutputDTO[]> => {
@@ -56,7 +58,7 @@ export class PostBusiness {
     public createPost = async (content: string, user: { id: string, name: string }): Promise<CreatePostOutputDTO> => {
 
         const post = new Post(
-            nowDate,
+            this.idGenerator.generate(),
             content,
             0,
             0,

@@ -1,4 +1,4 @@
-export enum Role {
+export enum Roles {
     ADMIN="ADMIN",
     USER="USER"
 }
@@ -7,7 +7,7 @@ export interface UserOutput{
     id:string,
     name:string,
     email:string,
-    role:Role,
+    role:Roles,
     createdAt:string,
     updatedAt:string
 
@@ -18,7 +18,7 @@ export interface UserDB {
     name:string,
     email:string,
     password:string,
-    role:Role,
+    role:Roles,
     created_at:string,
     updated_at:string
 }

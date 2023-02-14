@@ -1,4 +1,4 @@
-import { Role, UserDB,  UserOutput } from "../types";
+import { Roles, UserDB,  UserOutput } from "../types";
 
 
 
@@ -8,7 +8,7 @@ export class User {
         private name:string,
         private email:string,
         private password:string,
-        private role:Role,
+        private role:Roles,
         private createdAt:string,
         private updatedAt:string
     ){} 
@@ -25,7 +25,7 @@ export class User {
     public setpassword(password:string):void{this.password=password}
     
     public getRole():string{return this.role}
-    public setRole(role:Role):void{this.role=role}
+    public setRole(role:Roles):void{this.role=role}
     
     public getcreatedAt():string{return this.createdAt}
     

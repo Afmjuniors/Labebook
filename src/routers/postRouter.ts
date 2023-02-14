@@ -9,6 +9,7 @@ import { UserDatabase } from "../database/UserDatabase"
 import { PostsDTO } from "../dto/PostDTO"
 import { UserDTO } from "../dto/UserDTO"
 import { BaseError } from "../error/BaseError"
+import { IdGenerator } from "../services/IdGenerator"
 
 export const postRouter = express.Router()
 
@@ -20,7 +21,8 @@ const postControllet = new PostController(
         postsDTO,
         new PostDatabase(),
         new UserDatabase(),
-        new ReactionDatabase()
+        new ReactionDatabase(),
+        new IdGenerator
     )
 )
 
