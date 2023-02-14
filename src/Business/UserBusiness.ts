@@ -6,12 +6,16 @@ import { NotFoundError } from "../error/NoTFoundError";
 import { NotUniqueValueError } from "../error/NotUniqueValueError";
 import { PasswordIncorrectError } from "../error/PasswordIncorrectError";
 import { User } from "../models/User";
-import { Role, UserDB } from "../types";
+import { IdGenerator } from "../services/IdGenerator";
+import { TokenManager } from "../services/TokenManager";
+import { Roles, UserDB } from "../types";
 
 export class UserBusiness{
     constructor(
       private userDTO: UserDTO,
-      private  userDatabase: UserDatabase
+      private  userDatabase: UserDatabase,
+      private idGenerator:IdGenerator,
+      private tokenManager:TokenManager
     ){}
 
     public getAllUsers = async (q:string | undefined):Promise<GetUsersOutputDTO> =>{
@@ -56,11 +60,11 @@ export class UserBusiness{
         }
         const newUser = new User
         (
-            nowDate+email,
+            this.idGenerator.generate(),
             name,
             email,
             password,
-            Role.USER,
+            Roles.USER,
             nowDate,
             nowDate
         )

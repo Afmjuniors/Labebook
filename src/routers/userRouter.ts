@@ -1,9 +1,10 @@
-import express, { Request, Response } from "express"
+import express from "express"
 import { UserBusiness } from "../Business/UserBusiness"
 import { UserControler } from "../controller/UserController"
 import { UserDatabase } from "../database/UserDatabase"
 import { UserDTO } from "../dto/UserDTO"
-import { BaseError } from "../error/BaseError"
+import { IdGenerator } from "../services/IdGenerator"
+import { TokenManager } from "../services/TokenManager"
 
 export const userRouter = express.Router()
 
@@ -13,7 +14,9 @@ const userController = new UserControler(
     userDTO,
     new UserBusiness(
         userDTO,
-        new UserDatabase()
+        new UserDatabase(),
+        new IdGenerator(),
+        new TokenManager()
     )
 )
 

@@ -57,4 +57,4 @@ export class PostsDTO{
         }
     }
 
-}
+}//"id": "u001",p003
