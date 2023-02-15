@@ -1,5 +1,5 @@
 import { PostsOutputDTO } from "../dto/PostDTO"
-import { PostDB } from "../types"
+import { PostDB, Roles } from "../types"
 
 export class Post{
     constructor(
@@ -11,7 +11,8 @@ export class Post{
         private updatedAt:string,
         private creator:{
             id:string,
-            name:string
+            name:string,
+            role:Roles
         }
     ){}
     public getId():string{return this.id}

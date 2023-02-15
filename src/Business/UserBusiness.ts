@@ -6,16 +6,18 @@ import { NotFoundError } from "../error/NoTFoundError";
 import { NotUniqueValueError } from "../error/NotUniqueValueError";
 import { PasswordIncorrectError } from "../error/PasswordIncorrectError";
 import { User } from "../models/User";
+import { HashManager } from "../services/HashManager";
 import { IdGenerator } from "../services/IdGenerator";
-import { TokenManager } from "../services/TokenManager";
+import { TokenManager, TokenPayload } from "../services/TokenManager";
 import { Roles, UserDB } from "../types";
 
 export class UserBusiness{
     constructor(
       private userDTO: UserDTO,
-      private  userDatabase: UserDatabase,
+      private userDatabase: UserDatabase,
       private idGenerator:IdGenerator,
-      private tokenManager:TokenManager
+      private tokenManager:TokenManager,
+      private hashManager: HashManager
     ){}
 
     public getAllUsers = async (q:string | undefined):Promise<GetUsersOutputDTO> =>{
@@ -42,6 +44,7 @@ export class UserBusiness{
 
     public createUser = async(input:CreateUserInputDTO ): Promise<CreateUserOutputDTO>=> {
         const {name,email,password} = input
+       
         if(name.length<3){
             throw new BadRequestError("'name' deve ter pelo menos 3 caracteres");
             
@@ -58,19 +61,25 @@ export class UserBusiness{
             throw new BadRequestError("Password teve conter pelo menos 1 letra Maiuscula, 1 letra minuscula, 1 caracter especial, 1 numero e ter de 8 a 12 caracteres");
 
         }
+        const hashedPassword = await this.hashManager.hash(password)
+        const id = this.idGenerator.generate()
         const newUser = new User
         (
-            this.idGenerator.generate(),
+            id,
             name,
             email,
-            password,
+            hashedPassword,
             Roles.USER,
             nowDate,
             nowDate
         )
         await this.userDatabase.insertUser(newUser.ToDatabase())
+
+        const payload: TokenPayload= newUser.ToPayload()
+
+        const token =this.tokenManager.createToken(payload)
         
-        const output = this.userDTO.CreateUserOutputDTO(newUser)
+        const output = this.userDTO.CreateUserOutputDTO(newUser,token)
         return output
 
 
@@ -83,9 +92,12 @@ export class UserBusiness{
         if(!user){
             throw new NotFoundError("Usuario não encontrado")
         }
-        if(password!==user.password){
-            throw new PasswordIncorrectError()
+        const isPassword =await this.hashManager.compare(password,user.password)
+        
+        if(!isPassword){
+            throw new PasswordIncorrectError("Senha ou email Incorreto")
         }
+       
         const userLogado = new User(
             user.id,
             user.name,
@@ -95,7 +107,12 @@ export class UserBusiness{
             user.created_at,
             user.updated_at
         )
-        const output = this.userDTO.LoginUserOutputDTO(userLogado)
+
+        const payload: TokenPayload= userLogado.ToPayload()
+        
+        const token =this.tokenManager.createToken(payload)
+
+        const output = this.userDTO.LoginUserOutputDTO(userLogado,token)
         return output
 
                 

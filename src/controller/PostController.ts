@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PostBusiness } from "../Business/PostBusiness";
-import { PostsDTO } from "../dto/PostDTO";
+import { DeletePostInputDTO, PostsDTO } from "../dto/PostDTO";
 import { BaseError } from "../error/BaseError";
 
 export class PostController{
@@ -31,14 +31,11 @@ export class PostController{
     }
     public createPost =async (req:Request,res:Response) => {
         try {
-            const input = this.postDTO.ContentPostInputDTO(req.body.content)
-            const user = {
-                id:req.body.creatorID as string, 
-                name:req.body.name as string
-            }           
+            const input = this.postDTO.CreatePostInputDTO(req.body.content,req.headers.authorization)
             
+
             
-            const output = await this.postBusiness.createPost(input,user)
+            const output = await this.postBusiness.createPost(input)
 
             res.status(201).send(output)
             
@@ -56,7 +53,7 @@ export class PostController{
     public editPost =async (req:Request,res:Response) => {
         try {
             const input = {
-                content:this.postDTO.ContentPostInputDTO(req.body.content),
+                data:this.postDTO.CreatePostInputDTO(req.body.content, req.headers.authorization),
                 id: req.params.id
             }
 
@@ -79,9 +76,12 @@ export class PostController{
     }
     public deletePost = async (req:Request, res:Response)=>{
         try {
-            const id = req.params.id
+            const input:DeletePostInputDTO = this.postDTO.DeletePostInputDTO(
+                req.params.id,
+                req.headers.authorization
+            )
 
-            const output = await this.postBusiness.deletePost(id)
+            const output = await this.postBusiness.deletePost(input)
 
             res.status(200).send(output)
             
