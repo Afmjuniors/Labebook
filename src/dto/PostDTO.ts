@@ -10,10 +10,20 @@ export interface PostsOutputDTO{
     updatedAt:string,
     creator:{
         id:string,
-        name:string
+        name:string,
     }
 
 }
+
+export interface CreatePostInputDTO{
+    content:string,
+    token:string
+}
+export interface DeletePostInputDTO{
+    id:string,
+    token:string
+}
+
 export interface CreatePostOutputDTO{
     message:string,
     post:PostsOutputDTO
@@ -31,9 +41,20 @@ export class PostsDTO{
         const dto:PostsOutputDTO[] = posts.map((post)=>post.toPostOutput())
         return dto
     }
-    public ContentPostInputDTO = (content:unknown):string =>{ 
-        if(typeof content!=='string'){throw new BadRequestError('Content deve ser uma string')}
-        return content
+    public CreatePostInputDTO = (
+        content:unknown,
+        token:unknown
+        ):CreatePostInputDTO =>{ 
+        if(typeof content!=='string')
+        {throw new BadRequestError('Content deve ser uma string')}
+        if(typeof token !== 'string')
+        {throw new BadRequestError('token invalida')}
+        const dto : CreatePostInputDTO ={
+            content,
+            token
+        }
+
+        return dto
 
     }
     public CreatePostOutputDTO = (post:Post):CreatePostOutputDTO =>{
@@ -43,6 +64,20 @@ export class PostsDTO{
         }
         return dto
     }
+
+    public DeletePostInputDTO = (id:unknown, token:unknown):DeletePostInputDTO=>{
+        if(typeof id !== 'string'){
+            throw new BadRequestError("'id' deve ser uma string")
+        }
+        if(typeof token !== 'string'){
+            throw new BadRequestError("'token' deve ser uma string")
+        }
+        return {
+            id,
+            token
+        }
+    }
+
     public PostReactionInputDTO = (like:unknown):boolean =>{
       
            if(typeof like !== 'boolean'){

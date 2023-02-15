@@ -1,3 +1,4 @@
+import { TokenPayload } from "../services/TokenManager";
 import { Roles, UserDB,  UserOutput } from "../types";
 
 
@@ -24,7 +25,7 @@ export class User {
     public getpassword():string{return this.password}
     public setpassword(password:string):void{this.password=password}
     
-    public getRole():string{return this.role}
+    public getRole():Roles{return this.role}
     public setRole(role:Roles):void{this.role=role}
     
     public getcreatedAt():string{return this.createdAt}
@@ -52,6 +53,14 @@ public ToDatabase():UserDB{
         role:this.role,
         created_at:this.createdAt,
         updated_at:this.updatedAt
+    }
+}
+
+public ToPayload():TokenPayload{
+    return{
+        id:this.id,
+        name:this.name,
+        role:this.role
     }
 }
     
