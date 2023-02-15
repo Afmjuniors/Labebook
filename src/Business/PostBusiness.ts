@@ -2,7 +2,7 @@ import { nowDate } from "../constants/patterns";
 import { PostDatabase } from "../database/PostDatabase";
 import { ReactionDatabase } from "../database/ReactionDatabase";
 import { UserDatabase } from "../database/UserDatabase";
-import { PostsOutputDTO, PostsDTO, CreatePostOutputDTO, PostReactionOutputDTO, CreatePostInputDTO, DeletePostInputDTO } from "../dto/PostDTO";
+import { PostsOutputDTO, PostsDTO, CreatePostOutputDTO, PostReactionOutputDTO, CreatePostInputDTO, DeletePostInputDTO, PostReactionInputDTO, GetPostsInputDTO } from "../dto/PostDTO";
 import { BadRequestError } from "../error/BadRequestError";
 import { NotFoundError } from "../error/NoTFoundError";
 import { Post } from "../models/Post";
@@ -20,13 +20,20 @@ export class PostBusiness {
         private tokenManager: TokenManager
     ) { }
 
-    public getPosts = async (input: string | undefined): Promise<PostsOutputDTO[]> => {
+    public getPosts = async (input: GetPostsInputDTO): Promise<PostsOutputDTO[]> => {
+        const {user, token} = input
+        const payload = this.tokenManager.getPyaload(token)
+
+        if (payload === null) {
+            throw new BadRequestError("Usuario não logado")
+        }
+
         let postsDB
-        if (!input) {
+        if (!user) {
             const posts: PostDB[] = await this.postDatabase.getAllPosts()
             postsDB = posts
         } else {
-            const posts: PostDB[] = await this.postDatabase.getPostByUserId(input)
+            const posts: PostDB[] = await this.postDatabase.getPostByUserId(user)
             postsDB = posts
         }
         const users = await this.userDatabase.getAllUsers()
@@ -149,9 +156,17 @@ export class PostBusiness {
             message: "Post deletado com sucesso"
         }
     }
-    public reactionPost = async (like: boolean, ids: { idPost: string, idUser: string }): Promise<PostReactionOutputDTO> => {
+    public reactionPost = async (input:PostReactionInputDTO): Promise<PostReactionOutputDTO> => {
+        const {like,idPost,token} = input
         const likeStr = like ? "like" : "dislike"
-        const user = await this.userDatabase.getUserById(ids.idUser)
+
+        const payload = this.tokenManager.getPyaload(token)
+
+        if (payload === null) {
+            throw new BadRequestError("Usuario não logado")
+        }
+
+        const user = await this.userDatabase.getUserById(payload.id)
         if (!user) {
             throw new NotFoundError("Usuario não encontrado")
         }
@@ -160,7 +175,7 @@ export class PostBusiness {
             name: user.name,
             role: user.role
         }
-        const postDB = await this.postDatabase.getPostById(ids.idPost)
+        const postDB = await this.postDatabase.getPostById(idPost)
         if (!postDB) {
             throw new NotFoundError("Post não encontrado")
         }
@@ -175,8 +190,8 @@ export class PostBusiness {
         )
 
         const reactionDB: Reaction = {
-            user_id: ids.idUser,
-            post_id: ids.idPost,
+            user_id: user.id,
+            post_id: idPost,
             like
         }
         let message
