@@ -80,11 +80,9 @@ export class UserBusiness{
         const token =this.tokenManager.createToken(payload)
         
         const output = this.userDTO.CreateUserOutputDTO(newUser,token)
-        return output
-
-
-        
+        return output        
     }
+
     public loginUser =async (input:LoginUserInputDTO): Promise<LoginUserOutputDTO> => {
         const {email,password} = input
 

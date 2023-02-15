@@ -15,6 +15,11 @@ export interface PostsOutputDTO{
 
 }
 
+export interface GetPostsInputDTO{
+    user?:string,
+    token:string 
+}
+
 export interface CreatePostInputDTO{
     content:string,
     token:string
@@ -28,6 +33,14 @@ export interface CreatePostOutputDTO{
     message:string,
     post:PostsOutputDTO
 }
+
+export interface PostReactionInputDTO{
+    like:boolean,
+    idPost:string,
+    token:string
+}
+
+
 export interface PostReactionOutputDTO{
     message:string
 }
@@ -36,6 +49,26 @@ export interface PostReactionOutputDTO{
 
 
 export class PostsDTO{
+
+    public GetPostInputDTO =(
+        token:unknown,
+        user?:unknown
+    ): GetPostsInputDTO=>{
+        if(typeof token !== 'string'){
+            throw new BadRequestError("'token' deve ser uma string")
+        }
+        if(user!== undefined){
+            if(typeof user !== 'string'){
+                throw new BadRequestError('user deve ser uma id de um usuario ou undefined')
+            }
+        }
+
+        const dto ={
+            token,
+            user
+        }
+        return dto
+    }
 
     public GetPostOutputDTO = (posts:Post[]): PostsOutputDTO[] =>{
         const dto:PostsOutputDTO[] = posts.map((post)=>post.toPostOutput())
@@ -78,13 +111,28 @@ export class PostsDTO{
         }
     }
 
-    public PostReactionInputDTO = (like:unknown):boolean =>{
+    public PostReactionInputDTO = (
+        like:unknown,
+        idPost:unknown,
+        token:unknown
+        ):PostReactionInputDTO =>{
       
            if(typeof like !== 'boolean'){
                throw new BadRequestError("'like' deve ser um booleano")
             }
+            if(typeof idPost !== 'string'){
+                throw new BadRequestError("'idPost' deve ser uma string")
+             }
+             if(typeof token !== 'string'){
+                throw new BadRequestError("'token' deve ser uma string")
+             }
+             const dto = {
+                like,
+                idPost,
+                token
+             }
 
-        return like
+        return dto
     }
     public PostReactionOuputDTO = (message:string):PostReactionOutputDTO=>{
         return{
@@ -92,4 +140,4 @@ export class PostsDTO{
         }
     }
 
-}//"id": "u001",p003
+}

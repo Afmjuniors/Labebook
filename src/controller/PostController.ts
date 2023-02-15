@@ -11,7 +11,11 @@ export class PostController{
 
     public getPosts = async (req:Request, res:Response)=>{
         try {
-            const input = req.query.q as string | undefined
+            const input = this.postDTO.GetPostInputDTO(
+                req.headers.authorization,
+                req.query.user)
+           
+            
 
             const output = await this.postBusiness.getPosts(input)
 
@@ -100,13 +104,12 @@ export class PostController{
     public reactionPost = async (req:Request,res:Response)=>{
         try {
 
-            const ids ={
-                idPost:req.params.id,
-                idUser:req.body.idUser
-            }
-            const input = this.postDTO.PostReactionInputDTO(req.body.like)
+            const input = this.postDTO.PostReactionInputDTO(
+                req.body.like,
+                req.params.id,
+                req.headers.authorization)
     
-            const output = await this.postBusiness.reactionPost(input,ids)
+            const output = await this.postBusiness.reactionPost(input)
 
             res.status(200).send(output)
             
