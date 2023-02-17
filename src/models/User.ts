@@ -1,5 +1,6 @@
+import { nowDate } from "../constants/patterns";
 import { TokenPayload } from "../services/TokenManager";
-import { Roles, UserDB,  UserOutput } from "../types";
+import { Roles, UserDB,  UserOutput, UserToEditDB } from "../types";
 
 
 
@@ -31,7 +32,7 @@ export class User {
     public getcreatedAt():string{return this.createdAt}
     
     public getUpdatedAt():string{return this.updatedAt}
-    public setUpdatedAt(updatedAt:string):void{this.updatedAt=updatedAt}
+    public setUpdatedAt():void{this.updatedAt=nowDate}
 
     public getUsersOutput():UserOutput{
         return {
@@ -54,6 +55,15 @@ public ToDatabase():UserDB{
         created_at:this.createdAt,
         updated_at:this.updatedAt
     }
+}
+public ToEditDatabase():UserToEditDB{
+ return{
+    email:this.email,
+    password:this.password,
+    role:this.role, 
+    updated_at:this.updatedAt
+
+ }
 }
 
 public ToPayload():TokenPayload{

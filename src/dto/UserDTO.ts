@@ -1,20 +1,20 @@
 import { BadRequestError } from "../error/BadRequestError";
 import { User } from "../models/User";
-import { Roles, UserOutput } from "../types";
+import { Roles } from "../types";
 
 
-export interface GetUsersOutputDTO {
-    message: string,
-    users: {
-        id: string,
-        name: string,
-        email: string,
-        role: Roles,
-        createdAt: string,
-        updatedAt: string
+// export interface GetUsersOutputDTO {
+//     message: string,
+//     users: {
+//         id: string,
+//         name: string,
+//         email: string,
+//         role: Roles,
+//         createdAt: string,
+//         updatedAt: string
 
-    }[]
-}
+//     }[]
+// }
 
 
 export interface CreateUserInputDTO {
@@ -48,20 +48,40 @@ export interface LoginUserOutputDTO {
     },
     token: string
 }
+export interface EditUserInputDTO{
+    id?:string
+    email?:string,
+    password?:string,
+    role?:Roles,
+    token:string
+}
+
+export interface EditUserOutputDTO{
+    message:string,
+    user: {
+        id: string,
+        name: string,
+        email: string,
+        role: Roles,
+        createdAt: string,
+        updatedAt: string
+
+    }
+
+}
+export interface DeleteUserInputDTO{
+    id?:string,
+    token:string
+}
+export interface DeleteUserOutputDTO{
+    message:string
+}
+
 
 
 export class UserDTO {
     constructor() { }
 
-    public GetUsersOutputDTO = (users: User[]): GetUsersOutputDTO => {
-        const arrUser: UserOutput[] = users.map((user) => user.getUsersOutput())
-        const dto: GetUsersOutputDTO = {
-            message: "Resultado da pesquisa",
-            users: arrUser
-        }
-
-        return dto
-    }
     public CreateUserInputDTO = (
         name: unknown,
         email: unknown,
@@ -122,6 +142,80 @@ export class UserDTO {
             token
         }
         return dto
+    }
+
+    public EditUserInputDTO = (
+        id:unknown,
+        email:unknown,
+        password: unknown,
+        role: unknown,
+        token: unknown
+    ):EditUserInputDTO => {
+        if (id !== undefined) {
+            if (typeof id !== 'string') {
+                throw new BadRequestError("'id' deve ser um string")
+            }
+        }
+        if (email !== undefined) {
+            if (typeof email !== 'string') {
+                throw new BadRequestError("'email' deve ser um string")
+            }
+        }
+        if (password !== undefined) {
+            if (typeof password !== 'string') {
+                throw new BadRequestError("'password' deve ser um string")
+            }
+        }
+        if (role !== undefined) {
+            if (role !== Roles.ADMIN && role !== Roles.NORMAL) {
+                throw new BadRequestError("'password' deve ser um string")
+            }
+        }
+        if (typeof token !== 'string') {
+            throw new BadRequestError("'password' deve ser um string")
+        }
+        const dto = {
+            id,
+            password,
+            role,
+            token
+        }
+        return dto
+    }
+
+    public EditUserOutputDTO = (user:User):EditUserOutputDTO=>{
+        const dto = {
+            message: "Usuario editado com sucesso",
+            user: user.getUsersOutput(),
+      
+        }
+        return dto
+    }
+
+    public DeleteUserInputDTO = (
+        id:unknown,
+        token:unknown
+    ):DeleteUserInputDTO=>{
+        if(id!==undefined){
+            if(typeof id !== 'string'){
+                throw new BadRequestError("'id' deve ser uma string ou undifenied")
+            }
+        }
+     
+        if(typeof token !== 'string'){
+            throw new BadRequestError("Token deve estar preenchido")
+        }
+        const dto = {
+            id,
+            token
+        }
+        return dto
+    }
+
+    public DeleteUserOutputDTO = (message:string):DeleteUserOutputDTO=>{
+        return{
+            message
+        }
     }
 
 

@@ -1,5 +1,7 @@
-import { UserDB } from "../types"
+import { UserDB, UserToEditDB } from "../types"
 import { BaseDatabase } from "./BaseDatabase"
+import { PostDatabase } from "./PostDatabase"
+import { ReactionDatabase } from "./ReactionDatabase"
 
 export class UserDatabase extends BaseDatabase {
     public static TABLE_USER = "users"
@@ -29,7 +31,7 @@ export class UserDatabase extends BaseDatabase {
             .insert(user)
 
     }
-    public editUser = async (id: string, user: UserDB): Promise<void> => {
+    public editUser = async (id: string, user: UserToEditDB): Promise<void> => {
         await BaseDatabase
             .connection(UserDatabase.TABLE_USER)
             .update(user)
@@ -37,6 +39,14 @@ export class UserDatabase extends BaseDatabase {
 
     }
     public deleteUser =async (id:string) => {
+        await BaseDatabase
+        .connection(ReactionDatabase.TABLE_REACTION)
+        .del()
+        .where({user_id:id})
+        await BaseDatabase
+        .connection(PostDatabase.TABLE_POST)
+        .del()
+        .where({creator_id:id})
         await BaseDatabase
         .connection(UserDatabase.TABLE_USER)
         .del()

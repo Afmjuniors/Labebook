@@ -17,7 +17,9 @@ CREATE TABLE posts (
     dislikes INTEGER DEFAULT(0) NOT NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    FOREIGN KEY (creator_id) REFERENCES users(id)
+    FOREIGN KEY (creator_id) REFERENCES users(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE likes_dislikes(
@@ -25,46 +27,30 @@ CREATE TABLE likes_dislikes(
     post_id TEXT NOT NULL,
     like INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
     FOREIGN KEY (post_id) REFERENCES posts(id)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
 );
 
 DROP TABLE users;
 DROP TABLE posts;
 DROP TABLE likes_dislikes;
-DROP TABLE followers;
 
 INSERT INTO users(id, name, email, password, role, created_at, updated_at)
 VALUES
-("u001","Alexandre Machado","alexandre@email.com","123456aA@","ADMIN","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
-("u002","Andre Ferreira","andre@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
-("u003","Alex Campolina","alex@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
-("u004","Camila Machado","camila@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
-("u005","Alexandre Horta","alexandreHorta@email.com","123456aA@","USER","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z");
+("5c417d47-af6d-48d1-af6e-e2d2741b5850","Alexandre Machado","alexandre@email.com","$2a$12$JKhm7vEHNMZHhOvDEoZ4WOd89CMyw./5yIp7hs65hyhzZ4ae264QK","ADMIN",DATETIME(),DATETIME()),
+("5ebc150d-f322-4c15-a01e-f68229d14dae","Andre Ferreira","andre@email.com","$2a$12$skjToNI2gCW02HT3OtzskuhwNwbzYJFJ1RaU2YYWOV/bZTtdCEd9m","NORMAL",DATETIME(),DATETIME()),
+("6d242db6-5af7-4023-83c8-a8852ec754aa","Alex Campolina","alex@email.com","$2a$12$skjToNI2gCW02HT3OtzskuhwNwbzYJFJ1RaU2YYWOV/bZTtdCEd9m","NORMAL",DATETIME(),DATETIME()),
+("934a424a-a33f-4e63-8a5f-56f884620660","Camila Campolina","camila@email.com","$2a$12$skjToNI2gCW02HT3OtzskuhwNwbzYJFJ1RaU2YYWOV/bZTtdCEd9m","NORMAL",DATETIME(),DATETIME());
 
 INSERT INTO posts(id,creator_id, content, created_at, updated_at)
 VALUES
-("p001","u001","Texto de um comentario aleatorio","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
-("p002","u002","Texto de um comentario aleatorio 2","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
-("p003","u001","Texto de um comentario aleatorio 3","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z"),
-("p004","u004","Texto de um comentario aleatorio 4","2023-02-05T00:39:08.821Z","2023-02-05T00:39:08.821Z");
-INSERT INTO likes_dislikes(user_id,post_id,like)
-VALUES
-("u002","p001",0),
-("u003","p001",0),
-("u004","p001",1),
-("u005","p001",0),
-("u001","p002",1),
-("u003","p002",1);
-
-INSERT INTO followers(followed_id,follow_id)
-VALUES
-("u001","u002"),
-("u001","u003"),
-("u003","u002"),
-("u004","u002"),
-("u005","u002"),
-("u002","u003"),
-("u002","u004");
+("44725dc0-a3f6-4f2a-9810-ea68984b7b94","5c417d47-af6d-48d1-af6e-e2d2741b5850","Usuario 1 texto 1",DATETIME(),DATETIME()),
+("3fb04f59-c749-4e4f-a639-75993ef4a60e","5ebc150d-f322-4c15-a01e-f68229d14dae","Usuario 2 texto 2",DATETIME(),DATETIME()),
+("36b1a067-d99f-4906-8087-6a50d25bdacc","5c417d47-af6d-48d1-af6e-e2d2741b5850","Usuario 1 texto 3",DATETIME(),DATETIME()),
+("f1c9a102-ef52-4ebc-91f3-f7b0bad925d7","6d242db6-5af7-4023-83c8-a8852ec754aa","Usuario 3 texto 4",DATETIME(),DATETIME());
 
 
 SELECT * FROM users;
