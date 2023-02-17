@@ -1,7 +1,9 @@
 import { nowDate, regexEmail, regexPassword } from "../constants/patterns";
 import { UserDatabase } from "../database/UserDatabase";
-import { CreateUserInputDTO, CreateUserOutputDTO, GetUsersOutputDTO, LoginUserInputDTO, LoginUserOutputDTO, UserDTO } from "../dto/UserDTO";
+import { DeletePostInputDTO } from "../dto/PostDTO";
+import { CreateUserInputDTO, CreateUserOutputDTO,  DeleteUserInputDTO,  DeleteUserOutputDTO,  EditUserInputDTO,  EditUserOutputDTO,  LoginUserInputDTO, LoginUserOutputDTO, UserDTO } from "../dto/UserDTO";
 import { BadRequestError } from "../error/BadRequestError";
+import { DeniedAuthoError } from "../error/DeniedAuthoError";
 import { NotFoundError } from "../error/NoTFoundError";
 import { NotUniqueValueError } from "../error/NotUniqueValueError";
 import { PasswordIncorrectError } from "../error/PasswordIncorrectError";
@@ -9,7 +11,7 @@ import { User } from "../models/User";
 import { HashManager } from "../services/HashManager";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager, TokenPayload } from "../services/TokenManager";
-import { Roles, UserDB } from "../types";
+import { Roles } from "../types";
 
 export class UserBusiness{
     constructor(
@@ -20,27 +22,6 @@ export class UserBusiness{
       private hashManager: HashManager
     ){}
 
-    public getAllUsers = async (q:string | undefined):Promise<GetUsersOutputDTO> =>{
-     
-        const usersDB:UserDB[] = await this.userDatabase.getAllUsers()
-        const users: User[] = usersDB.map((user)=>{
-            return new User(
-                user.id,
-                user.name,
-                user.email,
-                user.password,
-                user.role,
-                user.created_at,
-                user.updated_at
-            )
-        })
-        
-
-        const output = this.userDTO.GetUsersOutputDTO(users)
-
-        return output
-
-    }
 
     public createUser = async(input:CreateUserInputDTO ): Promise<CreateUserOutputDTO>=> {
         const {name,email,password} = input
@@ -69,7 +50,7 @@ export class UserBusiness{
             name,
             email,
             hashedPassword,
-            Roles.USER,
+            Roles.NORMAL,
             nowDate,
             nowDate
         )
@@ -114,5 +95,83 @@ export class UserBusiness{
         return output
 
                 
+    }
+
+    public editUser = async (input:EditUserInputDTO):Promise<EditUserOutputDTO>=>{
+        const {id,email, password,role,token} = input
+
+        const payload = this.tokenManager.getPyaload(token)
+        if(payload === null){
+            throw new BadRequestError("Token invalido")
+        }
+        if(payload.role !== Roles.ADMIN){
+            if(payload.id!==id){
+                throw new DeniedAuthoError("Usuarios 'NORMAL' so pode editar a si mesmo")
+            }
+        }
+        
+        if(role && payload.role !== Roles.ADMIN){
+            throw new DeniedAuthoError("Usuario precisa ser ADMIN para trocar o role de um usuario")
+        }
+        if(password!==undefined){
+            if(!password.match(regexPassword)){
+                throw new BadRequestError("Password teve conter pelo menos 1 letra Maiuscula, 1 letra minuscula, 1 caracter especial, 1 numero e ter de 8 a 12 caracteres");
+            }
+            if(payload.id!==id){
+                throw new DeniedAuthoError("Apenas o proprio usuario pode editar seu password")
+            }
+        }
+        const userDB = await this.userDatabase.getUserById(id||payload.id)
+        if(userDB === undefined){
+            throw new NotFoundError("usuario não encontrado")
+        }
+        const userEdit = new User(
+            userDB.id,
+            userDB.name,
+            userDB.email,
+            userDB.password,
+            userDB.role,
+            userDB.created_at,
+            userDB.updated_at
+        )
+        if(password){
+            const hashedPassword = await this.hashManager.hash(password)
+            userEdit.setpassword(hashedPassword)
+            userEdit.setUpdatedAt()
+        }
+        if(role){
+            userEdit.setRole(role)
+            userEdit.setUpdatedAt()
+
+        }
+        if(email){
+            userEdit.setEmail(email)
+            userEdit.setUpdatedAt()
+
+        }
+        const userToEditDB = userEdit.ToEditDatabase()
+        
+        await this.userDatabase.editUser(userEdit.getId(),userToEditDB)
+
+        const output = this.userDTO.EditUserOutputDTO(userEdit)
+
+        return output
+ 
+    }
+
+    public deleteUser = async (input:DeleteUserInputDTO):Promise<DeleteUserOutputDTO> => {
+        const {id, token} = input
+        const payload = this.tokenManager.getPyaload(token)
+        if(payload === null){
+            throw new BadRequestError("Token invalido")
+        }
+        if(payload.role!==Roles.ADMIN){
+            if(payload.id!==id){
+                throw new DeniedAuthoError("Um usuario 'NORMAL' pode deletar somente si mesmo")
+            }
+        }
+        await this.userDatabase.deleteUser(id||payload.id)
+
+        return this.userDTO.DeleteUserOutputDTO("Usuario deletado com sucesso")
     }
 }

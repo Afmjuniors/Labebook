@@ -28,6 +28,9 @@ export interface DeletePostInputDTO{
     id:string,
     token:string
 }
+export interface DeletePostOutputDTO{
+    message:string
+}
 
 export interface CreatePostOutputDTO{
     message:string,
@@ -110,6 +113,12 @@ export class PostsDTO{
             token
         }
     }
+    public DeletePostOutputDTO=():DeletePostOutputDTO=>{
+        return {
+            message:"Post deletado com sucesso"
+        }
+    }
+
 
     public PostReactionInputDTO = (
         like:unknown,

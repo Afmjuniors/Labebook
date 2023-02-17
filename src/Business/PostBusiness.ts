@@ -27,7 +27,7 @@ export class PostBusiness {
         if (payload === null) {
             throw new BadRequestError("Usuario não logado")
         }
-
+        console.log(user)
         let postsDB
         if (!user) {
             const posts: PostDB[] = await this.postDatabase.getAllPosts()
@@ -152,9 +152,8 @@ export class PostBusiness {
 
 
         await this.postDatabase.deletePostById(id)
-        return {
-            message: "Post deletado com sucesso"
-        }
+        
+        return this.postDTO.DeletePostOutputDTO()
     }
     public reactionPost = async (input:PostReactionInputDTO): Promise<PostReactionOutputDTO> => {
         const {like,idPost,token} = input
