@@ -104,9 +104,12 @@ export class UserBusiness{
         if(payload === null){
             throw new BadRequestError("Token invalido")
         }
-        if(payload.role !== Roles.ADMIN){
-            if(payload.id!==id){
-                throw new DeniedAuthoError("Usuarios 'NORMAL' so pode editar a si mesmo")
+        if(id){
+
+            if(payload.role !== Roles.ADMIN){
+                if(payload.id!==id){
+                    throw new DeniedAuthoError("Usuarios 'NORMAL' so pode editar a si mesmo")
+                }
             }
         }
         
@@ -122,6 +125,8 @@ export class UserBusiness{
             }
         }
         const userDB = await this.userDatabase.getUserById(id||payload.id)
+        console.log(userDB)
+
         if(userDB === undefined){
             throw new NotFoundError("usuario não encontrado")
         }
@@ -165,9 +170,11 @@ export class UserBusiness{
         if(payload === null){
             throw new BadRequestError("Token invalido")
         }
-        if(payload.role!==Roles.ADMIN){
-            if(payload.id!==id){
-                throw new DeniedAuthoError("Um usuario 'NORMAL' pode deletar somente si mesmo")
+        if(id){
+            if(payload.role!==Roles.ADMIN){
+                if(payload.id!==id){
+                    throw new DeniedAuthoError("Um usuario 'NORMAL' pode deletar somente si mesmo")
+                }
             }
         }
         await this.userDatabase.deleteUser(id||payload.id)
