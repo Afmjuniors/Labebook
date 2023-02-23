@@ -40,7 +40,7 @@ DROP TABLE likes_dislikes;
 
 INSERT INTO users(id, name, email, password, role, created_at, updated_at)
 VALUES
-("5c417d47-af6d-48d1-af6e-e2d2741b5850","Alexandre Machado","alexandre@email.com","$2a$12$JKhm7vEHNMZHhOvDEoZ4WOd89CMyw./5yIp7hs65hyhzZ4ae264QK","ADMIN",DATETIME(),DATETIME()),
+("5c417d47-af6d-48d1-af6e-e2d2741b5850","Alexandre Machado","alexandre@email.com","$2a$12$skjToNI2gCW02HT3OtzskuhwNwbzYJFJ1RaU2YYWOV/bZTtdCEd9m","ADMIN",DATETIME(),DATETIME()),
 ("5ebc150d-f322-4c15-a01e-f68229d14dae","Andre Ferreira","andre@email.com","$2a$12$skjToNI2gCW02HT3OtzskuhwNwbzYJFJ1RaU2YYWOV/bZTtdCEd9m","NORMAL",DATETIME(),DATETIME()),
 ("6d242db6-5af7-4023-83c8-a8852ec754aa","Alex Campolina","alex@email.com","$2a$12$skjToNI2gCW02HT3OtzskuhwNwbzYJFJ1RaU2YYWOV/bZTtdCEd9m","NORMAL",DATETIME(),DATETIME()),
 ("934a424a-a33f-4e63-8a5f-56f884620660","Camila Campolina","camila@email.com","$2a$12$skjToNI2gCW02HT3OtzskuhwNwbzYJFJ1RaU2YYWOV/bZTtdCEd9m","NORMAL",DATETIME(),DATETIME());
