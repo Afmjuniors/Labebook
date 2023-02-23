@@ -72,11 +72,11 @@ export class PostsDTO{
         }
         return dto
     }
-
     public GetPostOutputDTO = (posts:Post[]): PostsOutputDTO[] =>{
         const dto:PostsOutputDTO[] = posts.map((post)=>post.toPostOutput())
         return dto
     }
+    
     public CreatePostInputDTO = (
         content:unknown,
         token:unknown

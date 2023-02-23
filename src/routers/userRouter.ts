@@ -22,5 +22,7 @@ const userController = new UserControler(
     )
 )
 
+userRouter.patch('/', userController.editUser)
+userRouter.delete('/', userController.deleteUser)
 userRouter.post('/signup', userController.createUser)
 userRouter.post('/login', userController.loginUser)

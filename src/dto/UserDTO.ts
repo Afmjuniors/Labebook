@@ -151,6 +151,7 @@ export class UserDTO {
         role: unknown,
         token: unknown
     ):EditUserInputDTO => {
+       
         if (id !== undefined) {
             if (typeof id !== 'string') {
                 throw new BadRequestError("'id' deve ser um string")
@@ -177,6 +178,7 @@ export class UserDTO {
         const dto = {
             id,
             password,
+            email,
             role,
             token
         }
