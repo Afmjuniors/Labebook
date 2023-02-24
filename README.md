@@ -70,7 +70,7 @@
 
 
 
-The application provides a social media API that is RESTful, where users can sign up, log in, and edit or delete their profile. By default, all users have the "NORMAL" role, and they can only edit or delete their own profile. Only an "ADMIN" can edit the roles of other users, and only an "ADMIN" can delete the profile of other users except for their own.
+The application provides a social media API that is RESTful, where users can sign up, log in, and edit or delete their profile. By default, all users have the "NORMAL" role, and they can only edit or delete their own profile. Only an "ADMIN" can edit the roles of other users, and only an "ADMIN" can delete the profile of other users.
 
 Users can create, edit, view, and delete their own posts. Only the creator of a post can change the content of the post. An "ADMIN" can delete any post, including their own.
 
