@@ -27,7 +27,6 @@ export class PostBusiness {
         if (payload === null) {
             throw new BadRequestError("Usuario não logado")
         }
-        console.log(user)
         let postsDB
         if (!user) {
             const posts: PostDB[] = await this.postDatabase.getAllPosts()
@@ -196,7 +195,6 @@ export class PostBusiness {
         let message
         const reaction = await this.reactionDatabase.findReaction(reactionDB)
         if (reaction) {
-            console.log(reaction.like, like)
             if (reaction.like == like) {//neutro
                 like ? post.setLikes(-1) : post.setDislikes(-1)
                 const toEdit = {

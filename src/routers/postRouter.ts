@@ -33,7 +33,7 @@ postRouter.put('/:id/reaction', postControllet.reactionPost) //reaction
 
 postRouter.patch('/:id', postControllet.editPost)
 
-postRouter.post('/:id', postControllet.editPost)
+// postRouter.post('/:id', postControllet.editPost)
 
 
 postRouter.delete('/:id', postControllet.deletePost)
